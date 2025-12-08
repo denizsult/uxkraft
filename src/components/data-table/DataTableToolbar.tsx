@@ -3,6 +3,7 @@ import type { Table } from "@tanstack/react-table";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search } from "lucide-react";
+import { RenderIf } from "@/components/render-if";
 import type { BulkAction, ToolbarAction } from "./DataTable";
 import {
   AlertDialog,
@@ -95,7 +96,7 @@ export function DataTableToolbar<TData>({
         </div>
 
         {/* Bulk Actions Row */}
-        {bulkActions.length > 0 && (
+        <RenderIf condition={bulkActions.length > 0}>
           <div className="flex items-center gap-4">
             <span className="text-sm text-muted-foreground">
               {hasSelection
@@ -122,22 +123,22 @@ export function DataTableToolbar<TData>({
                     disabled={isDisabled}
                     onClick={() => handleBulkAction(action)}
                   >
-                    {action.icon && (
+                    <RenderIf condition={action.icon}>
                       <span className="mr-1.5">{action.icon}</span>
-                    )}
+                    </RenderIf>
                     {action.label}
                   </Button>
                 );
               })}
             </div>
           </div>
-        )}
+        </RenderIf>
       </div>
 
       {/* Bulk Action Confirmation Dialog */}
-      {bulkActionDialog && (
+      <RenderIf condition={bulkActionDialog}>
         <AlertDialog
-          open={bulkActionDialog.isOpen}
+          open={bulkActionDialog?.isOpen}
           onOpenChange={(open) =>
             !open && setBulkActionDialog(null)
           }
@@ -156,7 +157,7 @@ export function DataTableToolbar<TData>({
               <AlertDialogAction
                 onClick={confirmBulkAction}
                 className={
-                  bulkActionDialog.action.variant === "destructive"
+                  bulkActionDialog?.action.variant === "destructive"
                     ? "bg-destructive text-destructive-foreground hover:bg-destructive/90"
                     : ""
                 }
@@ -166,7 +167,7 @@ export function DataTableToolbar<TData>({
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-      )}
+      </RenderIf>
     </>
   );
 }

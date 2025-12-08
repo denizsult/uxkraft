@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
+import { useItemDetailSheet } from "@/stores/item-detail-sheet";
 import type { Item } from "../types";
 
 export const itemsTableColumns: ColumnDef<Item>[] = [
@@ -55,11 +56,18 @@ export const itemsTableColumns: ColumnDef<Item>[] = [
   {
     accessorKey: "itemName",
     header: "Item Name",
-    cell: ({ row }) => (
-      <span className="text-sm text-link hover:text-link-hover cursor-pointer">
-        {row.getValue("itemName")}
-      </span>
-    ),
+    cell: ({ row }) => {
+      const item = row.original;
+      
+      return (
+        <span
+          className="text-sm text-link hover:text-link-hover cursor-pointer"
+          onClick={() => useItemDetailSheet.getState().open(item)}
+        >
+          {row.getValue("itemName")}
+        </span>
+      );
+    },
   },
   {
     accessorKey: "vendor",

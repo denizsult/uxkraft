@@ -7,6 +7,7 @@ import type { DataTableConfig, BulkAction, ToolbarAction } from "@/components/da
 import { useItems } from "../api/get-items";
 import type { Item } from "../types";
 import { itemsTableColumns } from "../config";
+import { ItemDetailSheet } from "./item-detail-sheet";
 
 const globalFilterFn: FilterFn<Item> = (row, _columnId, filterValue) => {
   const searchValue = String(filterValue).toLowerCase();
@@ -95,6 +96,7 @@ export const ItemsTable = () => {
     <div className="w-full">
       <h1 className="text-2xl font-semibold text-foreground mb-6">Items</h1>
       <DataTable data={data} config={config} isLoading={isLoading} />
+      <ItemDetailSheet />
     </div>
   );
 };

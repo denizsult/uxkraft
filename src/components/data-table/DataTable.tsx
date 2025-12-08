@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import {
   useReactTable,
@@ -5,12 +7,13 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   type FilterFn,
-  type Table,
   type ColumnDef,
+  type Table as TableType,
 } from "@tanstack/react-table";
 import type { ReactNode } from "react";
 
 import { Spinner } from "@/components/ui/spinner";
+import { Table as TableComponent } from "@/components/ui/table";
 import { DataTableHeader } from "./DataTableHeader";
 import { DataTableBody } from "./DataTableBody";
 import { DataTableFooter } from "./DataTableFooter";
@@ -30,7 +33,7 @@ export type ToolbarAction<TData> = {
   icon?: ReactNode;
   onClick: () => void;
   variant?: "default" | "outline" | "ghost";
-  disabled?: boolean | ((table: Table<TData>) => boolean);
+  disabled?: boolean | ((table: TableType<TData>) => boolean);
 };
 
 export type DataTableConfig<TData> = {
@@ -118,14 +121,11 @@ export function DataTable<TData>({
         bulkActions={bulkActions}
       />
 
-      <div className="mt-4 border border-border rounded-lg overflow-hidden">
-        <table
-          className="w-full text-sm"
-          style={{ borderCollapse: "collapse" }}
-        >
+      <div className="mt-4 overflow-hidden rounded-md border">
+        <TableComponent>
           <DataTableHeader table={table} />
           <DataTableBody table={table} columnsCount={columns.length} />
-        </table>
+        </TableComponent>
       </div>
 
       <DataTableFooter table={table} />
