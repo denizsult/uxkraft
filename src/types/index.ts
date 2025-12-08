@@ -1,3 +1,5 @@
+export * from './item';
+
 export type BaseEntity = {
   id: string;
   createdAt: string;
@@ -15,4 +17,5 @@ export type PaginatedResponse<T> = {
   data: T[];
   meta: Meta;
 };
+
 

@@ -1,28 +1,27 @@
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter } from "react-router-dom";
 
-import { AppRoot } from '../root';
+import { AppRoot } from "../root";
 
 export const createRouter = () =>
   createBrowserRouter([
     {
-      path: '/',
+      path: "/",
       element: <AppRoot />,
       children: [
         {
           index: true,
           lazy: async () => {
-            const { LandingRoute } = await import('./landing');
+            const { LandingRoute } = await import("./landing");
             return { Component: LandingRoute };
           },
         },
         {
-          path: '/users',
+          path: "/items",
           lazy: async () => {
-            const { UsersRoute } = await import('@/features/users');
-            return { Component: UsersRoute };
+            const { ItemsRoute } = await import("@/features/items");
+            return { Component: ItemsRoute };
           },
         },
       ],
     },
   ]);
-
