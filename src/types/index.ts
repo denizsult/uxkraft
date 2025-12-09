@@ -1,4 +1,5 @@
 export * from './item';
+export * from './datatable';
 
 export type BaseEntity = {
   id: string;

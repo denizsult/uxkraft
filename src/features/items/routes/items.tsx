@@ -1,7 +1,5 @@
-import { MainLayout } from '@/components/layouts/main-layout';
-import { Button } from '@/components/ui/button';
-
-import { ItemsList } from '../components/items-list';
+import { MainLayout } from "@/components/layouts/main-layout";
+import { Button } from "@/components/ui/button";
 
 export const ItemsRoute = () => {
   return (
@@ -14,9 +12,7 @@ export const ItemsRoute = () => {
           </div>
           <Button>Add Item</Button>
         </div>
-        <ItemsList />
       </div>
     </MainLayout>
   );
 };
-

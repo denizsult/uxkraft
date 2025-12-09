@@ -4,5 +4,15 @@ export { DataTableBody } from './DataTableBody';
 export { DataTableFooter } from './DataTableFooter';
 export { DataTableToolbar } from './DataTableToolbar';
 export { DataTablePagination } from './DataTablePagination';
-export type { DataTableProps, DataTableConfig, BulkAction, ToolbarAction } from './DataTable';
+export type {
+  DataTableProps,
+  DataTableConfig,
+  BulkAction,
+  ToolbarAction,
+  DataTableBodyProps,
+  DataTableHeaderProps,
+  DataTableFooterProps,
+  DataTablePaginationProps,
+  DataTableToolbarProps,
+} from '@/types/datatable';
 

@@ -1,67 +1,88 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown } from "lucide-react";
+import { ChevronDownIcon } from "lucide-react";
 import { useItemDetailSheet } from "@/stores/item-detail-sheet";
 import type { Item } from "../types";
 
 export const itemsTableColumns: ColumnDef<Item>[] = [
   {
     id: "select",
+    meta: {
+      headerClassName: "w-10 p-0",
+      cellClassName: "w-10 p-0",
+    },
+    size: 10,
     header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected()
-            ? true
-            : table.getIsSomePageRowsSelected()
+      <div className="flex items-center justify-center h-full px-3 py-2.5">
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected()
+              ? true
+              : table.getIsSomePageRowsSelected()
               ? "indeterminate"
               : false
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-        className="border-muted-foreground/40"
-      />
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+          className="w-4 h-4  border-[#e0e0e0] data-[state=checked]:bg-blue-800 data-[state=checked]:border-blue-800 hover:data-[state=checked]:bg-blue-900"
+        />
+      </div>
     ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-        className="border-muted-foreground/40"
-      />
-    ),
+    cell: ({ row }) => {
+      const isSelected = row.getIsSelected();
+      return (
+        <div className="flex items-center justify-center h-full px-3 py-3.5">
+          <Checkbox
+            checked={isSelected}
+            onCheckedChange={(value) => row.toggleSelected(!!value)}
+            aria-label={isSelected ? "Deselect row" : "Select row"}
+            className="w-4 h-4 border-[#e0e0e0] data-[state=checked]:bg-blue-800 data-[state=checked]:border-blue-800 hover:data-[state=checked]:bg-blue-900"
+          />
+        </div>
+      );
+    },
     enableSorting: false,
     enableHiding: false,
   },
   {
     accessorKey: "itemNumber",
-    header: "Item#",
-    cell: ({ row }) => (
-      <span className="text-sm text-foreground">{row.getValue("itemNumber")}</span>
-    ),
+    meta: {
+      headerClassName: "w-[74px]",
+      cellClassName: "w-[74px]",
+    },
+    header: () => "Item#",
+    cell: ({ row }) => row.getValue("itemNumber"),
   },
   {
     accessorKey: "specNumber",
-    header: "Spec #",
-    cell: ({ row }) => (
-      <span className="text-sm text-foreground">{row.getValue("specNumber")}</span>
-    ),
+    meta: {
+      headerClassName: "w-[74px]",
+      cellClassName: "w-[74px]",
+    },
+    header: () => "Spec #",
+    cell: ({ row }) => row.getValue("specNumber"),
   },
   {
     accessorKey: "itemName",
-    header: "Item Name",
+    meta: {
+      headerClassName: "w-[113.5px]",
+      cellClassName: "w-[113.5px] text-[#8e2424]",
+    },
+    header: () => "Item Name",
     cell: ({ row }) => {
       const item = row.original;
-      
+
       return (
         <span
-          className="text-sm text-link hover:text-link-hover cursor-pointer"
+          className="cursor-pointer"
           onClick={() => useItemDetailSheet.getState().open(item)}
         >
           {row.getValue("itemName")}
@@ -71,32 +92,46 @@ export const itemsTableColumns: ColumnDef<Item>[] = [
   },
   {
     accessorKey: "vendor",
-    header: "Vendor",
-    cell: ({ row }) => (
-      <span className="text-sm text-foreground">{row.getValue("vendor")}</span>
-    ),
+    meta: {
+      headerClassName: "w-[130px]",
+      cellClassName: "w-[130px]",
+    },
+    header: () => "Vendor",
+    cell: ({ row }) => row.getValue("vendor"),
+    filterFn: (row, id, value) => {
+      if (!value) return true;
+      return row.getValue(id) === value;
+    },
   },
   {
     accessorKey: "shipTo",
-    header: "Ship To",
-    cell: ({ row }) => (
-      <span className="text-sm text-foreground">{row.getValue("shipTo")}</span>
-    ),
+    meta: {
+      headerClassName: "w-[103px]",
+      cellClassName: "w-[103px]",
+    },
+    header: () => "Ship To",
+    cell: ({ row }) => row.getValue("shipTo"),
   },
   {
     accessorKey: "qty",
-    header: "Qty",
-    cell: ({ row }) => (
-      <span className="text-sm text-foreground">{row.getValue("qty")}</span>
-    ),
+    meta: {
+      headerClassName: "w-[53px]",
+      cellClassName: "w-[53px]",
+    },
+    header: () => "Qty",
+    cell: ({ row }) => row.getValue("qty"),
   },
   {
     accessorKey: "phase",
-    header: "Phase",
+    meta: {
+      headerClassName: "w-[63px]",
+      cellClassName: "w-[63px] h-11",
+    },
+    header: () => "Phase",
     cell: ({ row }) => (
-      <span className="inline-flex items-center justify-center min-w-[28px] h-6 px-2 text-xs font-medium rounded-[4px] border border-[hsl(220,13%,85%)] bg-[hsl(0,0%,100%)] text-foreground shadow-sm">
+      <Badge className="w-[30px] h-7 flex items-center justify-center px-2.5 py-1 bg-[#e0e0e0] hover:bg-[#e0e0e0] [font-family:'Inter',Helvetica] font-semibold text-[#544f4f] text-xs rounded-[3px]">
         {row.getValue("phase")}
-      </span>
+      </Badge>
     ),
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
@@ -104,44 +139,56 @@ export const itemsTableColumns: ColumnDef<Item>[] = [
   },
   {
     accessorKey: "price",
-    header: "Price",
+    meta: {
+      headerClassName: "w-[109px]",
+      cellClassName: "w-[109px] text-right",
+    },
+    header: () => "Price",
     cell: ({ row }) => {
       const price = parseFloat(row.getValue("price"));
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "USD",
       }).format(price);
-      return <span className="text-sm text-foreground">{formatted}</span>;
+      return formatted;
     },
   },
   {
     accessorKey: "shipNotes",
-    header: "Ship Notes",
+    meta: {
+      headerClassName: "w-[113.5px]",
+      cellClassName: "w-[113.5px] h-11 px-3 py-1.5",
+    },
+    header: () => "Ship Notes",
     cell: ({ row }) => (
-      <span className="text-sm text-foreground truncate max-w-[120px] block">
+      <div className="[display:-webkit-box] [-webkit-line-clamp:1] [-webkit-box-orient:vertical] overflow-hidden text-ellipsis [font-family:'Inter',Helvetica] font-normal text-[#271716] text-xs tracking-[0.20px]">
         {row.getValue("shipNotes")}
-      </span>
+      </div>
     ),
   },
   {
     id: "actions",
-    header: "Action",
-    cell: ({ row }) => (
+    meta: {
+      headerClassName: "w-[71px]",
+      cellClassName: "w-[73px] h-[46px] px-3 py-1.5",
+    },
+    header: () => "Action",
+    cell: () => (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="sm" className="h-8 px-2 text-sm font-normal">
+          <Button
+            variant="ghost"
+            className="h-auto p-0 gap-2 hover:bg-transparent [font-family:'Inter',Helvetica] font-medium text-[#312e2e] text-xs tracking-[0.20px]"
+          >
             Edit
-            <ChevronDown className="ml-1 h-4 w-4" />
+            <ChevronDownIcon className="w-4 h-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem>Edit Item</DropdownMenuItem>
-          <DropdownMenuItem>View Details</DropdownMenuItem>
-          <DropdownMenuItem>Duplicate</DropdownMenuItem>
-          <DropdownMenuItem className="text-destructive">Delete</DropdownMenuItem>
+          <DropdownMenuItem>Edit</DropdownMenuItem>
+          <DropdownMenuItem>Delete</DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
     ),
   },
 ];
-

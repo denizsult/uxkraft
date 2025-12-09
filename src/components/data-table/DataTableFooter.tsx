@@ -1,9 +1,5 @@
-import type { Table } from "@tanstack/react-table";
 import { DataTablePagination } from "./DataTablePagination";
-
-interface DataTableFooterProps<TData> {
-  table: Table<TData>;
-}
+import type { DataTableFooterProps } from "@/types/datatable";
 
 export function DataTableFooter<TData>({
   table,

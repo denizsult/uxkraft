@@ -1,4 +1,3 @@
-import type { Table } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -7,10 +6,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import type { DataTablePaginationProps } from "@/types/datatable";
 
-interface DataTablePaginationProps<TData> {
-  table: Table<TData>;
-}
+const rowsPerPageOptions = [
+  { value: "5", label: "5" },
+  { value: "10", label: "10" },
+  { value: "20", label: "20" },
+  { value: "50", label: "50" },
+];
 
 export function DataTablePagination<TData>({
   table,
@@ -23,123 +26,122 @@ export function DataTablePagination<TData>({
   const startRow = pageIndex * pageSize + 1;
   const endRow = Math.min((pageIndex + 1) * pageSize, totalRows);
 
-  // Generate page numbers to display
+  // Generate page numbers to display (max 4 pages)
   const getVisiblePages = () => {
-    const pages: (number | string)[] = [];
     const maxVisible = 4;
     
-    if (pageCount <= maxVisible + 2) {
-      for (let i = 0; i < pageCount; i++) {
-        pages.push(i);
-      }
-    } else {
-      if (pageIndex < maxVisible - 1) {
-        for (let i = 0; i < maxVisible; i++) {
-          pages.push(i);
-        }
-        pages.push("...");
-        pages.push(pageCount - 1);
-      } else if (pageIndex > pageCount - maxVisible) {
-        pages.push(0);
-        pages.push("...");
-        for (let i = pageCount - maxVisible; i < pageCount; i++) {
-          pages.push(i);
-        }
-      } else {
-        pages.push(0);
-        pages.push("...");
-        pages.push(pageIndex - 1);
-        pages.push(pageIndex);
-        pages.push(pageIndex + 1);
-        pages.push("...");
-        pages.push(pageCount - 1);
-      }
+    if (pageCount <= maxVisible) {
+      return Array.from({ length: pageCount }, (_, i) => i);
     }
     
-    return pages;
+    // Determine start page based on current position
+    let start: number;
+    if (pageIndex < 2) {
+      // Near start: show first pages
+      start = 0;
+    } else if (pageIndex > pageCount - 3) {
+      // Near end: show last pages
+      start = pageCount - maxVisible;
+    } else {
+      // Middle: show current page with one before and two after
+      start = pageIndex - 1;
+    }
+    
+ 
+    return Array.from({ length: maxVisible }, (_, i) => start + i);
   };
 
+  const visiblePages = getVisiblePages();
+
   return (
-    <div className="flex items-center justify-between px-2 py-4">
-      <div className="flex items-center gap-2">
-        <span className="text-sm text-muted-foreground">Rows per page</span>
+    <nav
+      className="flex items-center justify-between w-full"
+      aria-label="Table pagination"
+    >
+      <div className="inline-flex items-center justify-end gap-3">
+        <label
+          htmlFor="rows-per-page"
+          className="[font-family:'Inter',Helvetica] font-medium text-[#271716] text-xs"
+        >
+          Rows per page
+        </label>
         <Select
-          value={`${table.getState().pagination.pageSize}`}
+          value={`${pageSize}`}
           onValueChange={(value) => {
             table.setPageSize(Number(value));
           }}
         >
-          <SelectTrigger className="h-8 w-[70px] bg-card">
-            <SelectValue placeholder={table.getState().pagination.pageSize} />
+          <SelectTrigger
+            id="rows-per-page"
+            className="h-8 w-[70px] bg-[#fcfcfc] border-[#e0e0e0] [font-family:'Inter',Helvetica] font-medium text-[#271716] text-xs"
+          >
+            <SelectValue />
           </SelectTrigger>
-          <SelectContent side="top">
-            {[5, 10, 20, 30, 50].map((pageSize) => (
-              <SelectItem key={pageSize} value={`${pageSize}`}>
-                {pageSize}
+          <SelectContent>
+            {rowsPerPageOptions.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.label}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
       </div>
 
-      <div className="flex items-center gap-1">
-        <span className="text-sm text-muted-foreground mr-2">
+      <div className="inline-flex items-center justify-end gap-8">
+        <div className="[font-family:'Inter',Helvetica] font-medium text-[#271716] text-xs text-center">
           {startRow}-{endRow} of {totalRows}
-        </span>
-        
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8 text-muted-foreground"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          <svg width="7" height="12" viewBox="0 0 7 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M6 1L1 6L6 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </Button>
-          
-        {getVisiblePages().map((page, index) => {
-          if (page === "...") {
+        </div>
+        <div className="inline-flex items-center gap-3">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="w-4 h-4 p-0 hover:bg-transparent cursor-pointer"
+            disabled={!table.getCanPreviousPage()}
+            onClick={() => table.previousPage()}
+            aria-label="Previous page"
+          >
+            <img
+              className="w-4 h-4"
+              alt="Previous page"
+              src="/icons/sort-left-1.svg"
+            />
+          </Button>
+          {visiblePages.map((pageNum) => {
+            const isActive = pageIndex === pageNum;
             return (
-              <span key={`ellipsis-${index}`} className="px-1 text-sm text-muted-foreground">
-                ...
-              </span>
+              <Button
+                key={pageNum}
+                variant="ghost"
+                size="sm"
+                className={`h-auto p-0 min-w-0 [font-family:'Inter',Helvetica] font-bold text-sm tracking-[0] leading-[30px] cursor-pointer hover:bg-transparent ${
+                  isActive
+                    ? "text-[#8e2424] underline"
+                    : "text-[#271716]"
+                }`}
+                onClick={() => table.setPageIndex(pageNum)}
+                aria-label={`Page ${pageNum + 1}`}
+                aria-current={isActive ? "page" : undefined}
+              >
+                {pageNum + 1}
+              </Button>
             );
-          }
-          
-          const pageNum = page as number;
-          const isActive = pageIndex === pageNum;
-          
-          return (
-            <Button
-              key={pageNum}
-              variant="ghost"
-              size="sm"
-              className={`h-8 w-8 p-0 text-sm font-normal rounded-md ${
-                isActive 
-                  ? "bg-[hsl(222,47%,11%)] text-white hover:bg-[hsl(222,47%,11%)] hover:text-white" 
-                  : "text-muted-foreground hover:text-foreground hover:bg-transparent"
-              }`}
-              onClick={() => table.setPageIndex(pageNum)}
-            >
-              {pageNum + 1}
-            </Button>
-          );
-        })}
-        
-        <Button
-          variant="ghost"
-          size="icon"
-          className="h-8 w-8 text-muted-foreground"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          <svg width="7" height="12" viewBox="0 0 7 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M1 1L6 6L1 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </Button>
+          })}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="w-4 h-4 p-0 hover:bg-transparent cursor-pointer"
+            disabled={!table.getCanNextPage()}
+            onClick={() => table.nextPage()}
+            aria-label="Next page"
+          >
+            <img
+              className="w-4 h-4"
+              alt="Next page"
+              src="/icons/sort-left-2.svg"
+            />
+          </Button>
+        </div>
       </div>
-    </div>
+    </nav>
   );
 }

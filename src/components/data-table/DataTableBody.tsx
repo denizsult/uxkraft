@@ -7,11 +7,7 @@ import {
   TableRow,
   TableCell,
 } from "@/components/ui/table";
-
-interface DataTableBodyProps<TData> {
-  table: Table<TData>;
-  columnsCount: number;
-}
+import type { DataTableBodyProps } from "@/types/datatable";
 
 export function DataTableBody<TData>({
   table,
@@ -33,12 +29,20 @@ export function DataTableBody<TData>({
           <TableRow
             key={row.id}
             data-state={row.getIsSelected() && "selected"}
+            className="border-b-0 hover:bg-[#fafafa] transition-colors"
           >
-            {row.getVisibleCells().map((cell) => (
-              <TableCell key={cell.id}>
-                {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              </TableCell>
-            ))}
+            {row.getVisibleCells().map((cell) => {
+              const meta = cell.column.columnDef.meta as { cellClassName?: string } | undefined;
+              const hasBorderInMeta = meta?.cellClassName?.includes("border-r");
+              return (
+                <TableCell 
+                  key={cell.id} 
+                  className={`p-3 ${!hasBorderInMeta ? "border-r border-[#eeeeee]" : ""} ${meta?.cellClassName || ""} [font-family:'Inter',Helvetica] font-normal text-[#271716] text-xs tracking-[0.20px]`}
+                >
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </TableCell>
+              );
+            })}
           </TableRow>
         ))}
       </RenderIf>

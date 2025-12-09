@@ -6,79 +6,38 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
-  type FilterFn,
-  type ColumnDef,
-  type Table as TableType,
+  type ColumnFiltersState,
 } from "@tanstack/react-table";
-import type { ReactNode } from "react";
 
 import { Spinner } from "@/components/ui/spinner";
 import { Table as TableComponent } from "@/components/ui/table";
+import { RenderIf } from "@/components/render-if";
 import { DataTableHeader } from "./DataTableHeader";
 import { DataTableBody } from "./DataTableBody";
 import { DataTableFooter } from "./DataTableFooter";
 import { DataTableToolbar } from "./DataTableToolbar";
-
-// Types
-export type BulkAction<TData> = {
-  label: string;
-  icon?: ReactNode;
-  onClick: (selectedRows: TData[]) => void | Promise<void>;
-  variant?: "default" | "destructive";
-  disabled?: (selectedRows: TData[]) => boolean;
-};
-
-export type ToolbarAction<TData> = {
-  label: string;
-  icon?: ReactNode;
-  onClick: () => void;
-  variant?: "default" | "outline" | "ghost";
-  disabled?: boolean | ((table: TableType<TData>) => boolean);
-};
-
-export type DataTableConfig<TData> = {
-  columns: ColumnDef<TData>[];
-  globalFilterFn?: FilterFn<TData>;
-  searchPlaceholder?: string;
-  toolbarActions?: ToolbarAction<TData>[];
-  bulkActions?: BulkAction<TData>[];
-  initialPageSize?: number;
-  enableRowSelection?: boolean;
-};
-
-export type DataTableProps<TData> = {
-  data: TData[];
-  config: DataTableConfig<TData>;
-  isLoading?: boolean;
-  className?: string;
-};
-
-const defaultGlobalFilterFn: FilterFn<any> = (row, _columnId, filterValue) => {
-  const searchValue = String(filterValue).toLowerCase();
-  
-  // Search in all string values
-  return Object.values(row.original as Record<string, unknown>).some((value) =>
-    String(value).toLowerCase().includes(searchValue)
-  );
-};
+import type { DataTableProps } from "@/types/datatable";
+import { defaultGlobalFilterFn } from "@/lib/utils";
 
 export function DataTable<TData>({
   data,
   config,
   isLoading = false,
   className = "",
+  filters,
 }: DataTableProps<TData>) {
   const [globalFilter, setGlobalFilter] = useState("");
   const [rowSelection, setRowSelection] = useState({});
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
   const {
     columns,
     globalFilterFn = defaultGlobalFilterFn,
     searchPlaceholder,
-    toolbarActions,
     bulkActions,
     initialPageSize = 5,
     enableRowSelection = true,
+    showSearch = true,
   } = config;
 
   const table = useReactTable({
@@ -89,11 +48,13 @@ export function DataTable<TData>({
     getPaginationRowModel: getPaginationRowModel(),
     onRowSelectionChange: enableRowSelection ? setRowSelection : undefined,
     onGlobalFilterChange: setGlobalFilter,
+    onColumnFiltersChange: setColumnFilters,
     globalFilterFn,
     enableRowSelection,
     state: {
       rowSelection: enableRowSelection ? rowSelection : {},
       globalFilter,
+      columnFilters,
     },
     initialState: {
       pagination: {
@@ -102,33 +63,35 @@ export function DataTable<TData>({
     },
   });
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <Spinner className="h-8 w-8" />
-      </div>
-    );
-  }
-
   return (
-    <div className={`w-full max-w-[1000px] mx-auto p-6 bg-card rounded-lg shadow-sm border border-border ${className}`}>
-      <DataTableToolbar
-        table={table}
-        globalFilter={globalFilter}
-        setGlobalFilter={setGlobalFilter}
-        searchPlaceholder={searchPlaceholder}
-        toolbarActions={toolbarActions}
-        bulkActions={bulkActions}
-      />
+    <RenderIf
+      condition={!isLoading}
+      fallback={
+        <div className="flex items-center justify-center p-8">
+          <Spinner className="h-8 w-8" />
+        </div>
+      }
+    >
+      <div className={`flex flex-col gap-3 w-full ${className}`}>
+        <DataTableToolbar
+          table={table}
+          globalFilter={globalFilter}
+          setGlobalFilter={setGlobalFilter}
+          searchPlaceholder={searchPlaceholder}
+          bulkActions={bulkActions}
+          filters={filters ? filters(table) : undefined}
+          showSearch={showSearch}
+        />
 
-      <div className="mt-4 overflow-hidden rounded-md border">
-        <TableComponent>
-          <DataTableHeader table={table} />
-          <DataTableBody table={table} columnsCount={columns.length} />
-        </TableComponent>
+        <div className="rounded-sm border border-[#d8d8d8] overflow-hidden">
+          <TableComponent>
+            <DataTableHeader table={table} />
+            <DataTableBody table={table} columnsCount={columns.length} />
+          </TableComponent>
+        </div>
+
+        <DataTableFooter table={table} />
       </div>
-
-      <DataTableFooter table={table} />
-    </div>
+    </RenderIf>
   );
 }
