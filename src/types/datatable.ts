@@ -9,6 +9,7 @@ export type BulkAction<TData> = {
   variant?: "default" | "destructive";
   disabled?: (selectedRows: TData[]) => boolean;
   sheetComponent?: ReactNode;
+  skipConfirmation?: boolean;
 };
 
 export type ToolbarAction<TData> = {

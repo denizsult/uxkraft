@@ -7,6 +7,8 @@ import type { Item } from "../types";
 import { itemsTableColumns } from "../config";
 import { ItemDetailSheet } from "./item-detail-sheet";
 import { ItemsTableFilters } from "./items-table-filters";
+import { BulkEditSheet } from "./bulk-edit";
+import { useBulkEditSheet } from "@/stores/bulk-edit-sheet";
 
 const globalFilterFn: FilterFn<Item> = (row, _columnId, filterValue) => {
   const searchValue = String(filterValue).toLowerCase();
@@ -24,6 +26,7 @@ const globalFilterFn: FilterFn<Item> = (row, _columnId, filterValue) => {
 export const ItemsTable = () => {
   const { data: itemsData, isLoading } = useItems();
   const data = itemsData?.data || [];
+  const { open: openBulkEdit } = useBulkEditSheet();
 
   // Extract unique phases and vendors for filter options
   const phaseOptions = useMemo(() => {
@@ -41,12 +44,10 @@ export const ItemsTable = () => {
       {
         label: "Bulk Edit",
         iconUrl: "/icons/bulk-edit.svg",
-        sheetComponent: (
-          <div className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Bulk Edit</h2>
-            <p>Bulk Edit functionality will be implemented here.</p>
-          </div>
-        ),
+        onClick: async (selectedRows) => {
+          openBulkEdit(selectedRows);
+        },
+        skipConfirmation: true,
       },
       {
         label: "Update Tracking",
@@ -76,7 +77,7 @@ export const ItemsTable = () => {
         },
       },
     ],
-    []
+    [openBulkEdit]
   );
 
   const filters = useMemo(
@@ -121,6 +122,7 @@ export const ItemsTable = () => {
         filters={filters}
       />
       <ItemDetailSheet />
+      <BulkEditSheet />
     </section>
   );
 };

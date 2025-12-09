@@ -81,12 +81,12 @@ export const itemsTableColumns: ColumnDef<Item>[] = [
       const item = row.original;
 
       return (
-        <span
-          className="cursor-pointer"
+        <div
+          className="cursor-pointer text-[#8e2424]"
           onClick={() => useItemDetailSheet.getState().open(item)}
         >
           {row.getValue("itemName")}
-        </span>
+        </div>
       );
     },
   },

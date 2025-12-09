@@ -29,6 +29,11 @@ export function DataTableToolbar<TData>({
     if (isDisabled) return;
 
     if (action.onClick && !action.sheetComponent) {
+      // If action has skipConfirmation flag, call onClick directly
+      if (action.skipConfirmation) {
+        action.onClick(selectedData);
+        return;
+      }
       setBulkActionDialog({ action, isOpen: true });
     }
   };

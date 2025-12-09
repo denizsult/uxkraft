@@ -37,7 +37,7 @@ const PhaseSelect = ({
 
   return (
     <Select value={selectedPhase || ""} onValueChange={handlePhaseSelect}>
-      <SelectTrigger className="h-[42px] gap-2 bg-[#fcfcfc] border-[#e0e0e0] [font-family:'Inter',Helvetica] font-medium text-[#271716] text-xs">
+      <SelectTrigger className="h-[42px] gap-2 bg-[#fcfcfc] border-[#e0e0e0] min-w-32  [font-family:'Inter',Helvetica] font-medium text-[#271716] text-xs">
         <SelectValue placeholder="Phase" />
       </SelectTrigger>
       <SelectContent>
@@ -72,7 +72,7 @@ const VendorSelect = ({
 
   return (
     <Select value={selectedVendor || ""} onValueChange={handleVendorSelect}>
-      <SelectTrigger className="h-[42px] gap-2 bg-[#fcfcfc] border-[#e0e0e0] [font-family:'Inter',Helvetica] font-medium text-[#271716] text-xs">
+      <SelectTrigger className="h-[42px] gap-2 bg-[#fcfcfc] border-[#e0e0e0] [font-family:'Inter',Helvetica] min-w-32 font-medium text-[#271716] text-xs">
         <SelectValue placeholder="Vendor" />
       </SelectTrigger>
       <SelectContent>
