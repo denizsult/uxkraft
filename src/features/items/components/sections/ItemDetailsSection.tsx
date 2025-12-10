@@ -102,11 +102,11 @@ export const ItemDetailsSection = ({
                 </div>
                 <div className="flex items-center gap-1 w-full">
                   <div className="flex flex-col items-start justify-center flex-1">
-                    <div className="flex  w-full h-6 font-medium text-content text-xs tracking-[0] leading-6 whitespace-nowrap">
+                    <div className="flex  w-full h-6 font-medium text-content text-xs leading-6 whitespace-nowrap">
                       {field.value}
                     </div>
                     {field.subValue && (
-                      <div className="flex items-center justify-center w-full h-4 font-normal text-muted-gray text-xs tracking-[0] leading-4 whitespace-nowrap">
+                      <div className="flex items-center justify-center w-full h-4 font-normal text-muted-gray text-xs leading-4 whitespace-nowrap">
                         {field.subValue}
                       </div>
                     )}
@@ -136,7 +136,7 @@ export const ItemDetailsSection = ({
 
           <div className="flex flex-col items-start gap-3 w-full">
             <div className="flex flex-col items-start w-full bg-white rounded-sm border border-solid border-[#d8d8d8]">
-              <div className="flex items-start w-full bg-[#f6f3f3] rounded-[2px_2px_0px_0px] border-b border-solid border-[#d8d8d8]">
+              <div className="flex items-start w-full bg-[#f6f3f3] rounded-t-sm border-b border-solid border-[#d8d8d8]">
                 {tableHeaders.map((header, index) => (
                   <div
                     key={index}
@@ -148,7 +148,7 @@ export const ItemDetailsSection = ({
                         : ""
                     }`}
                   >
-                    <div className="w-full font-medium text-muted-gray text-xs tracking-[0] leading-5">
+                    <div className="w-full font-medium text-muted-gray text-xs leading-5">
                       {header.label}
                     </div>
                   </div>
@@ -157,42 +157,42 @@ export const ItemDetailsSection = ({
               <div className="flex items-start w-full">
                 <div className="flex-1 flex flex-col items-start">
                   <div className="flex h-11 items-center px-3 py-1.5 w-full border-r border-solid border-[#eeeeee] gap-2.5">
-                    <div className="flex-1 leading-[normal] overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:2] [-webkit-box-orient:vertical] font-normal text-content text-xs tracking-[0]">
+                    <div className="flex-1 leading-normal line-clamp-2 overflow-hidden text-ellipsis font-normal text-content text-xs">
                       {productData.description}
                     </div>
                   </div>
                 </div>
                 <div className="flex flex-col w-[110px] items-start">
                   <div className="flex h-11 items-center px-3 py-1.5 w-full border-r border-solid border-[#eeeeee] gap-2.5">
-                    <div className="flex-1 h-6 font-normal text-content text-xs tracking-[0] leading-6 whitespace-nowrap overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:1] [-webkit-box-orient:vertical]">
+                    <div className="flex-1 h-6 font-normal text-content text-xs leading-6 whitespace-nowrap overflow-hidden text-ellipsis ">
                       {productData.price}
                     </div>
                   </div>
                 </div>
                 <div className="w-[68px] flex flex-col items-start">
                   <div className="flex h-11 items-center px-3 py-1.5 w-full border-r border-solid border-[#eeeeee] gap-2.5">
-                    <div className="flex-1 h-6 font-normal text-content text-xs tracking-[0] leading-6 whitespace-nowrap overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:1] [-webkit-box-orient:vertical]">
+                    <div className="flex-1 h-6 font-normal text-content text-xs leading-6 whitespace-nowrap overflow-hidden text-ellipsis ">
                       {productData.markup}
                     </div>
                   </div>
                 </div>
                 <div className="flex flex-col w-[110px] items-start">
                   <div className="flex h-11 items-center px-3 py-1.5 w-full border-r border-solid border-[#eeeeee] gap-2.5">
-                    <div className="flex-1 h-6 text-right leading-6 whitespace-nowrap overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:1] [-webkit-box-orient:vertical] font-normal text-content text-xs tracking-[0]">
+                    <div className="flex-1 h-6 text-right leading-6 whitespace-nowrap overflow-hidden text-ellipsis  font-normal text-content text-xs">
                       {productData.unitPrice}
                     </div>
                   </div>
                 </div>
                 <div className="w-[45px] flex flex-col items-start">
                   <div className="flex h-11 items-center px-3 py-1.5 w-full border-r border-solid border-[#eeeeee] gap-2.5">
-                    <div className="flex-1 h-6 font-normal text-content text-xs tracking-[0] leading-6 whitespace-nowrap overflow-hidden text-ellipsis [display:-webkit-box] [-webkit-line-clamp:1] [-webkit-box-orient:vertical]">
+                    <div className="flex-1 h-6 font-normal text-content text-xs leading-6 whitespace-nowrap overflow-hidden text-ellipsis ">
                       {productData.qty}
                     </div>
                   </div>
                 </div>
                 <div className="w-[60px] flex flex-col items-start">
                   <div className="flex h-11 items-center px-3 py-1.5 w-full gap-2.5">
-                    <div className="w-fit leading-6 whitespace-nowrap font-normal text-content text-xs tracking-[0]">
+                    <div className="w-fit leading-6 whitespace-nowrap font-normal text-content text-xs">
                       {productData.unit}
                     </div>
                   </div>
@@ -200,10 +200,10 @@ export const ItemDetailsSection = ({
               </div>
             </div>
             <div className="flex h-8 items-center justify-end gap-3 px-3 py-0 w-full bg-input-bg rounded">
-              <div className="w-fit flex items-center justify-center font-semibold text-content text-xs tracking-[0.06px] leading-[normal]">
+              <div className="w-fit flex items-center justify-center font-semibold text-content text-xs leading-normal">
                 TOTAL PRICE
               </div>
-              <div className="w-[100px] text-right flex items-center justify-center font-semibold text-content text-xs tracking-[0.06px] leading-[normal]">
+              <div className="w-[100px] text-right flex items-center justify-center font-semibold text-content text-xs leading-normal">
                 {formatCurrency(totalPrice)}
               </div>
             </div>

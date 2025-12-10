@@ -6,7 +6,10 @@ import {
   SheetFooter,
   SheetContainer,
 } from "@/components/sheet-layout";
-import { PlanningRequirementsSection, ProductionShopSection } from "../sections";
+import {
+  PlanningRequirementsSection,
+  ProductionShopSection,
+} from "../sections";
 import { useBulkUpdateTracking } from "../../api";
 import { ShippingSection } from "../sections/ShippingSection";
 
@@ -40,11 +43,16 @@ export const UpdateTrackingSheet = () => {
     onSuccessMessage: "Tracking updated successfully",
     onErrorMessage: "Failed to update tracking",
     onSuccess: () => {
-      close();
+      handleClose();
     },
   });
 
-  const { setValue, getValues } = useForm<UpdateTrackingFormValues>({
+  const {
+    setValue,
+    getValues,
+    reset,
+    formState: { isDirty },
+  } = useForm<UpdateTrackingFormValues>({
     defaultValues: {
       shipping: {
         ordered_date: undefined,
@@ -72,16 +80,6 @@ export const UpdateTrackingSheet = () => {
       production: formValues.production,
       shipping: formValues.shipping,
     });
-  };
-
-  const handleClose = () => {
-    close();
-  };
-
-  const handleOpenChange = (open: boolean) => {
-    if (!open) {
-      close();
-    }
   };
 
   const handlePlanningChange = (
@@ -114,10 +112,34 @@ export const UpdateTrackingSheet = () => {
     });
   };
 
+  const handleClose = () => {
+    reset(
+      {
+        shipping: {
+          ordered_date: undefined,
+          shipped_date: undefined,
+          delivered_date: undefined,
+        },
+        production: {
+          cfa_shops_send: undefined,
+          cfa_shops_approved: undefined,
+          cfa_shops_delivered: undefined,
+        },
+        planning: {
+          po_approval_date: undefined,
+          hotel_need_by_date: undefined,
+          expected_delivery: undefined,
+        },
+      },
+      { keepDirty: false }
+    );
+    close();
+  };
+
   const formValues = getValues();
 
   return (
-    <Sheet open={isOpen} onOpenChange={handleOpenChange}>
+    <Sheet open={isOpen} onOpenChange={close}>
       <SheetContent
         side="right"
         className="w-full sm:max-w-[600px] overflow-y-auto bg-sheet-bg p-0"
@@ -127,13 +149,13 @@ export const UpdateTrackingSheet = () => {
             title="Update Tracking"
             subtitle={
               <>
-                <span className="font-semibold text-content tracking-[0.02px]">
+                <span className="font-semibold text-content">
                   {selectedItems.length} items
                 </span>
-                <span className="font-light text-content tracking-[0.02px]">
+                <span className="font-light text-content">
                   {" "}
                 </span>
-                <span className="text-content tracking-[0.02px]">
+                <span className="text-content">
                   will be updated
                 </span>
               </>
@@ -183,6 +205,7 @@ export const UpdateTrackingSheet = () => {
             onCancel={handleClose}
             onSave={handleSave}
             isLoading={isBulkUpdateTrackingPending}
+            isSaveDisabled={!isDirty}
           />
         </SheetContainer>
       </SheetContent>

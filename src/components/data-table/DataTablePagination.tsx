@@ -92,9 +92,9 @@ export function DataTablePagination<TData>({
                   key={pageNum}
                   variant="ghost"
                   size="sm"
-                  className={`h-auto p-0 min-w-0  font-bold text-sm  leading-[30px] cursor-pointer hover:bg-transparent ${
+                  className={`h-auto p-0 min-w-0  font-bold text-sm  leading-8 cursor-pointer hover:bg-transparent ${
                     isActive
-                      ? "text-[#8e2424] underline"
+                      ? "text-[#CA0018] underline"
                       : "text-content"
                   }`}
                   onClick={() => table.setPageIndex(pageNum)}

@@ -24,7 +24,7 @@ export const SheetHeader = ({
     <header
       className={`flex items-start gap-5 pt-6 pb-4 px-6 w-full ${
         bgTransparent ? "bg-transparent" : "bg-sheet-bg"
-      } rounded-[4px_4px_2px_2px] relative ${className || ""}`}
+      } rounded-t-sm rounded-b-[2px] relative ${className || ""}`}
     >
       <div className="flex flex-col items-start gap-4 flex-1">
         <div className="flex items-center gap-4 w-full">

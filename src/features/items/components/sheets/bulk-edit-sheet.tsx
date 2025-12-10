@@ -53,13 +53,21 @@ const formFields = [
 ];
 export const BulkEditSheet = () => {
   const { isOpen, close, selectedItems } = useBulkEditSheet();
-  const { mutateAsync: bulkUpdateItemsMutation } = useBulkUpdateItems({
+  const {
+    mutateAsync: bulkUpdateItemsMutation,
+    isPending: isBulkUpdateItemsPending,
+  } = useBulkUpdateItems({
     refetchQueries: ["useGetItems"],
     onSuccessMessage: "Bulk edit updated successfully",
     onErrorMessage: "Failed to update bulk edit",
   });
 
-  const { getValues, setValue } = useForm<BulkUpdateItemsDto>({
+  const {
+    getValues,
+    setValue,
+    reset,
+    formState: { isDirty },
+  } = useForm<BulkUpdateItemsDto>({
     defaultValues: {
       location: undefined,
       category: undefined,
@@ -67,6 +75,7 @@ export const BulkEditSheet = () => {
       ship_notes: undefined,
     },
   });
+
   const handleSave = async () => {
     const formValues = getValues();
     const data = {
@@ -75,11 +84,24 @@ export const BulkEditSheet = () => {
     };
 
     await bulkUpdateItemsMutation(data);
-    close();
+    handleClose();
   };
 
   const handleFieldChange = (field: string, value: string) => {
-    setValue(field as keyof BulkUpdateItemsDto, value);
+    setValue(field as keyof BulkUpdateItemsDto, value, { shouldDirty: true });
+  };
+
+  const handleClose = () => {
+    reset(
+      {
+        location: undefined,
+        category: undefined,
+        ship_from: undefined,
+        ship_notes: undefined,
+      },
+      { keepDirty: false }
+    );
+    close();
   };
 
   return (
@@ -90,18 +112,18 @@ export const BulkEditSheet = () => {
             title="Bulk Edit"
             subtitle={
               <>
-                <span className="font-semibold text-content tracking-[0.02px]">
+                <span className="font-semibold text-content">
                   {selectedItems.length} items
                 </span>
-                <span className="font-light text-content tracking-[0.02px] leading-[0.1px]">
+                <span className="font-light text-content">
                   {" "}
                 </span>
-                <span className="text-content tracking-[0.02px] leading-[0.1px]">
+                <span className="text-content">
                   will be updated
                 </span>
               </>
             }
-            onClose={close}
+            onClose={handleClose}
             bgTransparent
           />
           <main className="flex flex-col items-start gap-6 p-6 flex-1">
@@ -171,7 +193,12 @@ export const BulkEditSheet = () => {
               </SheetSection>
             </SheetCard>
           </main>
-          <SheetFooter onCancel={close} onSave={handleSave} />
+          <SheetFooter
+            onCancel={handleClose}
+            onSave={handleSave}
+            isLoading={isBulkUpdateItemsPending}
+            isSaveDisabled={!isDirty}
+          />
         </SheetContainer>
       </SheetContent>
     </Sheet>

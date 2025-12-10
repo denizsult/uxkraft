@@ -63,10 +63,10 @@ const VendorSelect = ({
   const handleVendorSelect = (value: string) => {
     if (value === "all" || value === "") {
       setSelectedVendor(null);
-      table.getColumn("vendor")?.setFilterValue(undefined);
+      table.getColumn("ship_from")?.setFilterValue(undefined);
     } else {
       setSelectedVendor(value);
-      table.getColumn("vendor")?.setFilterValue(value);
+      table.getColumn("ship_from")?.setFilterValue(value);
     }
   };
 

@@ -7,13 +7,13 @@ import {
   type ColumnFiltersState,
 } from "@tanstack/react-table";
 
-import { Spinner } from "@/components/ui/spinner";
 import { Table as TableComponent } from "@/components/ui/table";
 import { RenderIf } from "@/components/render-if";
 import { DataTableHeader } from "./DataTableHeader";
 import { DataTableBody } from "./DataTableBody";
 import { DataTableFooter } from "./DataTableFooter";
 import { DataTableToolbar } from "./DataTableToolbar";
+import { DataTableLoader } from "./DataTableLoader";
 import type { DataTableProps } from "@/types/datatable";
 
 export function DataTable<TData>({
@@ -59,34 +59,30 @@ export function DataTable<TData>({
   });
 
   return (
-    <RenderIf
-      condition={!isLoading}
-      fallback={
-        <div className="flex items-center justify-center p-8">
-          <Spinner className="h-8 w-8" />
-        </div>
-      }
-    >
-      <div className={`flex flex-col gap-3 w-full ${className}`}>
-        <DataTableToolbar
-          table={table}
-          globalFilter={globalFilter}
-          setGlobalFilter={setGlobalFilter}
-          searchPlaceholder={searchPlaceholder}
-          bulkActions={bulkActions}
-          filters={filters ? filters(table) : undefined}
-          showSearch={showSearch}
-        />
+    <div className={`flex flex-col gap-3 w-full ${className}`}>
+      <DataTableToolbar
+        table={table}
+        globalFilter={globalFilter}
+        setGlobalFilter={setGlobalFilter}
+        searchPlaceholder={searchPlaceholder}
+        bulkActions={bulkActions}
+        filters={filters ? filters(table) : undefined}
+        showSearch={showSearch}
+      />
 
-        <div className="rounded-sm border border-[#d8d8d8] overflow-hidden">
-          <TableComponent>
-            <DataTableHeader table={table} />
+      <div className="rounded-sm border border-[#d8d8d8] overflow-hidden">
+        <TableComponent>
+          <DataTableHeader table={table} />
+          <RenderIf condition={isLoading}>
+            <DataTableLoader columnsCount={columns.length} />
+          </RenderIf>
+          <RenderIf condition={!isLoading}>
             <DataTableBody table={table} columnsCount={columns.length} />
-          </TableComponent>
-        </div>
-
-        <DataTableFooter table={table} />
+          </RenderIf>
+        </TableComponent>
       </div>
-    </RenderIf>
+
+      <DataTableFooter table={table} />
+    </div>
   );
 }

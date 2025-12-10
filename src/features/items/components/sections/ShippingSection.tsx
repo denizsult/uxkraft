@@ -72,7 +72,7 @@ export const ShippingSection = ({
               >
                 <Label
                   htmlFor={field.fieldName}
-                  className="font-medium text-black text-sm tracking-[0] leading-5"
+                  className="font-medium text-black text-sm leading-5"
                 >
                   {field.label}
                 </Label>
@@ -86,7 +86,7 @@ export const ShippingSection = ({
                         handleDateChange(field.fieldName, date)
                       }
                       placeholder="Select date"
-                      className="h-[42px] w-full bg-input-bg rounded border border-solid border-input-border font-normal text-content text-xs tracking-[0] leading-6 px-3 py-2"
+                      className="h-[42px] w-full bg-input-bg rounded border border-solid border-input-border font-normal text-content text-xs leading-6 px-3 py-2"
                     />
                   )}
                 />
@@ -108,7 +108,7 @@ export const ShippingSection = ({
                   id="shipping_notes"
                   value={value}
                   onChange={(e) => handleNotesChange(e.target.value)}
-                  className="min-h-[88px] w-full bg-input-bg rounded border border-solid border-input-border font-normal text-content text-xs tracking-[0] leading-6 px-3 py-2"
+                  className="min-h-[88px] w-full bg-input-bg rounded border border-solid border-input-border font-normal text-content text-xs leading-6 px-3 py-2"
                   placeholder="Delicate product"
                 />
               )}

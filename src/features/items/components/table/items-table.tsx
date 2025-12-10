@@ -12,7 +12,7 @@ import { BulkEditSheet, ItemDetailSheet, UpdateTrackingSheet } from "../sheets";
 import { globalFilterFn } from "@/utils/datatable";
 
 export const ItemsTable = () => {
-  const { data, isLoading } = useGetItems();
+  const { data, isLoading, isFetching } = useGetItems();
 
   const { open: openBulkEdit } = useBulkEditSheet();
   const { open: openUpdateTracking } = useUpdateTrackingSheet();
@@ -105,7 +105,7 @@ export const ItemsTable = () => {
       <DataTable
         data={data || []}
         config={config}
-        isLoading={isLoading}
+        isLoading={isLoading || isFetching}
         filters={filters}
       />
       <ItemDetailSheet />

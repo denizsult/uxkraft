@@ -58,7 +58,10 @@ export const itemsTableColumns: ColumnDef<Item>[] = [
       cellClassName: "w-[74px]",
     },
     header: () => "Item#",
-    cell: ({ row }) => row.getValue("id"),
+    cell: ({ row }) => {
+      const id = row.getValue("id") as number;
+      return String(id).padStart(3, "0"); // for padding the id to 3 digits
+    },
   },
   {
     accessorKey: "spec_number",
@@ -131,8 +134,8 @@ export const itemsTableColumns: ColumnDef<Item>[] = [
       const phase = row.getValue("phase") as string | null;
       if (!phase) return "-";
       return (
-        <Badge className="w-[30px] h-7 flex items-center justify-center px-2.5 py-1 bg-input-border hover:bg-input-border  font-semibold text-[#544f4f] text-xs rounded-[3px]">
-          {phase}
+        <Badge className="w-[30px] h-7 flex items-center justify-center px-2.5 py-1 bg-[#E0E0E0] hover:bg-input-border  font-semibold text-[#544f4f] text-xs rounded-[3px]">
+          {phase.padStart(2, "0")}
         </Badge>
       );
     },
@@ -164,7 +167,7 @@ export const itemsTableColumns: ColumnDef<Item>[] = [
     },
     header: () => "Ship Notes",
     cell: ({ row }) => (
-      <div className="[display:-webkit-box] [-webkit-line-clamp:1] [-webkit-box-orient:vertical] overflow-hidden text-ellipsis  font-normal text-content text-xs ">
+      <div className="line-clamp-1 overflow-hidden text-ellipsis font-normal text-content text-xs">
         {row.getValue("ship_notes") || "-"}
       </div>
     ),

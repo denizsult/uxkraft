@@ -65,7 +65,7 @@ export const PlanningRequirementsSection = ({
               <div key={field.fieldName} className="flex flex-col items-start gap-2">
                 <Label
                   htmlFor={field.fieldName}
-                  className="font-medium text-black text-sm tracking-[0] leading-5"
+                  className="font-medium text-black text-sm leading-5"
                 >
                   {field.label}
                 </Label>
@@ -82,13 +82,13 @@ export const PlanningRequirementsSection = ({
                         )
                       }
                       placeholder="Select date"
-                      className="h-[42px] w-full bg-input-bg rounded border border-solid border-input-border font-normal text-content text-xs tracking-[0] leading-6 px-3 py-2"
+                      className="h-[42px] w-full bg-input-bg rounded border border-solid border-input-border font-normal text-content text-xs leading-6 px-3 py-2"
                     />
                   )}
                 />
                 <RenderIf condition={field.fieldName === "expected_delivery" && daysLate > 0}>
                   <div className="inline-flex items-center gap-2">
-                    <span className="font-medium text-[#ce2d2d] text-xs tracking-[0] leading-5 whitespace-nowrap">
+                    <span className="font-medium text-[#ce2d2d] text-xs leading-5 whitespace-nowrap">
                       Late by {daysLate} {daysLate === 1 ? "day" : "days"}
                     </span>
                   </div>

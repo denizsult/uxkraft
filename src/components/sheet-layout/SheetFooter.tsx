@@ -7,6 +7,7 @@ type SheetFooterProps = {
   cancelLabel?: string;
   saveLabel?: string;
   isLoading?: boolean;
+  isSaveDisabled?: boolean;
 };
 
 export const SheetFooter = ({
@@ -15,6 +16,7 @@ export const SheetFooter = ({
   cancelLabel = "Cancel",
   saveLabel = "Save Changes",
   isLoading = false,
+  isSaveDisabled = false,
 }: SheetFooterProps) => {
   return (
     <footer className="flex items-center gap-2 pt-4 pb-6 px-6 w-full rounded-sm">
@@ -29,9 +31,10 @@ export const SheetFooter = ({
         </Button>
       </SheetClose>
       <Button
-        className="h-10 px-6 py-3 bg-[#8e2424] hover:bg-[#8e2424]/90 text-white font-medium text-sm  transition-colors"
+        className="h-10 px-6  cursor-pointer py-3 bg-[#8e2424] hover:bg-[#8e2424]/90 text-white font-medium text-sm  transition-colors"
         onClick={onSave}
         isLoading={isLoading}
+        disabled={isSaveDisabled}
       >
         {saveLabel}
       </Button>
