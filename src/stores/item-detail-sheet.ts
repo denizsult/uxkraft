@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-import type { Item } from '@/features/items/types';
+import type { Item } from '@/types/item';
 
 type ItemDetailSheetState = {
   isOpen: boolean;

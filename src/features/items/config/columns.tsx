@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useItemDetailSheet } from "@/stores/item-detail-sheet";
-import type { Item } from "../types";
+import type { Item } from "@/types/item";
 
 export const itemsTableColumns: ColumnDef<Item>[] = [
   {
@@ -31,7 +31,7 @@ export const itemsTableColumns: ColumnDef<Item>[] = [
           }
           onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
           aria-label="Select all"
-          className="w-4 h-4  border-[#e0e0e0] data-[state=checked]:bg-blue-800 data-[state=checked]:border-blue-800 hover:data-[state=checked]:bg-blue-900"
+          className="w-4 h-4  border-input-border data-[state=checked]:bg-blue-800 data-[state=checked]:border-blue-800 hover:data-[state=checked]:bg-blue-900"
         />
       </div>
     ),
@@ -43,7 +43,7 @@ export const itemsTableColumns: ColumnDef<Item>[] = [
             checked={isSelected}
             onCheckedChange={(value) => row.toggleSelected(!!value)}
             aria-label={isSelected ? "Deselect row" : "Select row"}
-            className="w-4 h-4 border-[#e0e0e0] data-[state=checked]:bg-blue-800 data-[state=checked]:border-blue-800 hover:data-[state=checked]:bg-blue-900"
+            className="w-4 h-4 border-input-border data-[state=checked]:bg-blue-800 data-[state=checked]:border-blue-800 hover:data-[state=checked]:bg-blue-900"
           />
         </div>
       );
@@ -90,13 +90,13 @@ export const itemsTableColumns: ColumnDef<Item>[] = [
     },
   },
   {
-    accessorKey: "vendor",
+    accessorKey: "ship_from",
     meta: {
       headerClassName: "w-[130px]",
       cellClassName: "w-[130px]",
     },
     header: () => "Vendor",
-    cell: ({ row }) => row.getValue("vendor"),
+    cell: ({ row }) => row.getValue("ship_from"),
     filterFn: (row, id, value) => {
       if (!value) return true;
       return row.getValue(id) === value;
@@ -131,7 +131,7 @@ export const itemsTableColumns: ColumnDef<Item>[] = [
       const phase = row.getValue("phase") as string | null;
       if (!phase) return "-";
       return (
-        <Badge className="w-[30px] h-7 flex items-center justify-center px-2.5 py-1 bg-[#e0e0e0] hover:bg-[#e0e0e0]  font-semibold text-[#544f4f] text-xs rounded-[3px]">
+        <Badge className="w-[30px] h-7 flex items-center justify-center px-2.5 py-1 bg-input-border hover:bg-input-border  font-semibold text-[#544f4f] text-xs rounded-[3px]">
           {phase}
         </Badge>
       );

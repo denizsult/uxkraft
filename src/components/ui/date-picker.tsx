@@ -1,4 +1,3 @@
-import { ChevronDown } from "lucide-react";
 import { format } from "date-fns";
 import { enUS } from "date-fns/locale";
 import {
@@ -7,12 +6,16 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
+import { RenderIf } from "../render-if";
+import { cn } from "@/lib/utils";
 
 type DatePickerProps = {
   value: Date | null;
   onChange: (date: Date | null) => void;
   placeholder?: string;
   disabled?: boolean;
+  className?: string;
+  showIcon?: boolean;
 };
 
 export const DatePicker = ({
@@ -20,6 +23,8 @@ export const DatePicker = ({
   onChange,
   placeholder = "Select date",
   disabled = false,
+  showIcon = true,
+  className,
 }: DatePickerProps) => {
   return (
     <Popover>
@@ -27,14 +32,19 @@ export const DatePicker = ({
         <button
           type="button"
           disabled={disabled}
-          className="w-full flex items-center gap-2 border border-border rounded-md px-3 py-2 text-sm hover:bg-accent transition text-left disabled:opacity-50 disabled:cursor-not-allowed"
+          className={cn(
+            "w-full flex justify-between items-center gap-2 border border-border rounded-md px-3 py-2 text-sm hover:bg-accent transition text-left disabled:opacity-50 disabled:cursor-not-allowed",
+            className
+          )}
         >
-          <span className="flex-1">
-            {value
-              ? format(value, "MM/dd/yyyy", { locale: enUS })
-              : placeholder}
-          </span>
-          <ChevronDown className="size-4 text-muted-foreground" />
+          {value ? format(value, "MM/dd/yyyy", { locale: enUS }) : placeholder}
+
+          <RenderIf condition={showIcon}>
+            <img
+              src="/icons/chevron-down.svg"
+              className="w-3 h-3 flex-shrink-0"
+            />
+          </RenderIf>
         </button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0" align="start">
@@ -47,4 +57,3 @@ export const DatePicker = ({
     </Popover>
   );
 };
-

@@ -11,7 +11,7 @@ export const SheetContainer = ({
 }: SheetContainerProps) => {
   return (
     <div
-      className={`flex flex-col min-h-screen bg-sheet-bg border border-solid border-[#e0e0e0] ${className || ""}`}
+      className={`flex flex-col min-h-screen bg-sheet-bg border border-solid border-input-border ${className || ""}`}
     >
       {children}
     </div>

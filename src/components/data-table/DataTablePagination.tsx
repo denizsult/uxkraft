@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/select";
  import type { DataTablePaginationProps } from "@/types/datatable";
  import { RenderIf } from "@/components/render-if";
+import { getVisiblePages } from "@/utils/pagination";
 
 const rowsPerPageOptions = [
   { value: "5", label: "5" },
@@ -27,32 +28,7 @@ export function DataTablePagination<TData>({
   const startRow = pageIndex * pageSize + 1;
   const endRow = Math.min((pageIndex + 1) * pageSize, totalRows);
 
-  // Generate page numbers to display (max 4 pages)
-  const getVisiblePages = () => {
-    const maxVisible = 4;
-    
-    if (pageCount <= maxVisible) {
-      return Array.from({ length: pageCount }, (_, i) => i);
-    }
-    
-    // Determine start page based on current position
-    let start: number;
-    if (pageIndex < 2) {
-      // Near start: show first pages
-      start = 0;
-    } else if (pageIndex > pageCount - 3) {
-      // Near end: show last pages
-      start = pageCount - maxVisible;
-    } else {
-      // Middle: show current page with one before and two after
-      start = pageIndex - 1;
-    }
-    
- 
-    return Array.from({ length: maxVisible }, (_, i) => start + i);
-  };
-
-  const visiblePages = getVisiblePages();
+  const visiblePages = getVisiblePages(pageIndex, pageCount);
   const hasData = totalRows > 0;
 
   return (
@@ -76,7 +52,7 @@ export function DataTablePagination<TData>({
           >
             <SelectTrigger
               id="rows-per-page"
-              className="h-8 w-[70px] bg-[#fcfcfc] border-[#e0e0e0]  font-medium text-content text-xs"
+              className="h-8 w-[70px] bg-input-bg border-input-border  font-medium text-content text-xs"
             >
               <SelectValue />
             </SelectTrigger>
@@ -116,7 +92,7 @@ export function DataTablePagination<TData>({
                   key={pageNum}
                   variant="ghost"
                   size="sm"
-                  className={`h-auto p-0 min-w-0  font-bold text-sm tracking-[0] leading-[30px] cursor-pointer hover:bg-transparent ${
+                  className={`h-auto p-0 min-w-0  font-bold text-sm  leading-[30px] cursor-pointer hover:bg-transparent ${
                     isActive
                       ? "text-[#8e2424] underline"
                       : "text-content"

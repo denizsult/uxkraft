@@ -19,12 +19,12 @@ export function DataTableToolbarSearch({
     <RenderIf condition={showSearch}>
       <div className="flex flex-col gap-2 flex-1">
         <div className="relative">
-          <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#616161]" />
+          <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-gray" />
           <Input
             placeholder={searchPlaceholder}
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            className="h-[42px] pl-9 pr-3 bg-[#fcfcfc] border-[#e0e0e0]  font-normal text-[#616161] text-xs"
+            className="h-[42px] pl-9 pr-3 bg-input-bg border-input-border  font-normal text-muted-gray text-xs"
           />
         </div>
       </div>

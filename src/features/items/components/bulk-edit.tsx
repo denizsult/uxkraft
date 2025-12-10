@@ -16,39 +16,75 @@ import {
   SheetFormField,
   SheetSection,
 } from "@/components/sheet-layout";
+import { useBulkUpdateItems, type BulkUpdateItemsDto } from "../api";
+import { useForm } from "react-hook-form";
 
+const formFields = [
+  {
+    id: "location",
+    label: "Location",
+    type: "select",
+    value: "Bedroom",
+    options: [
+      "Bedroom",
+      "Living Room",
+      "Kitchen",
+      "Bathroom",
+      "Office",
+      "Other",
+    ],
+  },
+  {
+    id: "category",
+    label: "Category",
+    type: "select",
+    value: "Drapery",
+    options: [
+      "Drapery",
+      "Window Treatments",
+      "Bedroom",
+      "Living Room",
+      "Kitchen",
+      "Bathroom",
+      "Office",
+      "Other",
+    ],
+  },
+];
 export const BulkEditSheet = () => {
   const { isOpen, close, selectedItems } = useBulkEditSheet();
+  const { mutateAsync: bulkUpdateItemsMutation } = useBulkUpdateItems({
+    refetchQueries: ["useGetItems"],
+    onSuccessMessage: "Bulk edit updated successfully",
+    onErrorMessage: "Failed to update bulk edit",
+  });
 
-  const formFields = [
-    {
-      id: "location",
-      label: "Location",
-      type: "select",
-      value: "Bedroom",
-      options: ["Bedroom"],
+  const { getValues, setValue } = useForm<BulkUpdateItemsDto>({
+    defaultValues: {
+      location: undefined,
+      category: undefined,
+      ship_from: undefined,
+      ship_notes: undefined,
     },
-    {
-      id: "category",
-      label: "Category",
-      type: "select",
-      value: "Drapery",
-      options: ["Drapery"],
-    },
-  ];
+  });
+  const handleSave = async () => {
+    const formValues = getValues();
+    const data = {
+      ...formValues,
+      item_ids: selectedItems?.map((item) => item.id),
+    };
 
-  const handleSave = () => {
-    // TODO: Implement bulk update logic
-    console.log("Saving bulk edit for items:", selectedItems);
+    await bulkUpdateItemsMutation(data);
     close();
+  };
+
+  const handleFieldChange = (field: string, value: string) => {
+    setValue(field as keyof BulkUpdateItemsDto, value);
   };
 
   return (
     <Sheet open={isOpen} onOpenChange={close}>
-      <SheetContent
-        side="right"
-        className="w-[600px] sm:max-w-[600px] p-0"
-      >
+      <SheetContent side="right" className="w-[600px] sm:max-w-[600px] p-0">
         <SheetContainer>
           <SheetHeader
             title="Bulk Edit"
@@ -80,10 +116,15 @@ export const BulkEditSheet = () => {
                         htmlFor={field.id}
                         className="h-[68px] flex-1"
                       >
-                        <Select defaultValue={field.value}>
+                        <Select
+                          defaultValue={field.value}
+                          onValueChange={(value) =>
+                            handleFieldChange(field.id, value)
+                          }
+                        >
                           <SelectTrigger
                             id={field.id}
-                            className="h-[42px] w-full bg-[#fcfcfc] border-[#e0e0e0] font-normal text-content text-xs tracking-[0] leading-6"
+                            className="h-[42px] w-full bg-input-bg border-input-border font-normal text-content text-xs  leading-6"
                           >
                             <SelectValue />
                           </SelectTrigger>
@@ -105,8 +146,11 @@ export const BulkEditSheet = () => {
                   >
                     <Input
                       id="shipFrom"
-                      className="h-[42px] w-full bg-[#fcfcfc] border-[#e0e0e0] font-normal text-content text-xs tracking-[0] leading-6"
+                      className="h-[42px] w-full bg-input-bg border-input-border font-normal text-content text-xs  leading-6"
                       defaultValue=""
+                      onChange={(e) =>
+                        handleFieldChange("ship_from", e.target.value)
+                      }
                     />
                   </SheetFormField>
                   <SheetFormField
@@ -116,8 +160,11 @@ export const BulkEditSheet = () => {
                   >
                     <Input
                       id="notes"
-                      className="h-[42px] w-full bg-[#fcfcfc] border-[#e0e0e0] font-normal text-content text-xs tracking-[0] leading-6"
+                      className="h-[42px] w-full bg-input-bg border-input-border font-normal text-content text-xs  leading-6"
                       defaultValue=""
+                      onChange={(e) =>
+                        handleFieldChange("ship_notes", e.target.value)
+                      }
                     />
                   </SheetFormField>
                 </div>

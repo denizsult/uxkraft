@@ -1,6 +1,6 @@
 "use client";
 
-import { flexRender, type Table } from "@tanstack/react-table";
+import { flexRender } from "@tanstack/react-table";
 import { RenderIf } from "@/components/render-if";
 import {
   TableBody,

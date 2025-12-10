@@ -2,8 +2,8 @@ import { useMemo } from "react";
 import type { FilterFn, Table } from "@tanstack/react-table";
 import { DataTable } from "@/components/data-table";
 import type { DataTableConfig, BulkAction } from "@/components/data-table";
-import { useItems } from "../api/get-items";
-import type { Item } from "../types";
+import { useGetItems } from "../api";
+import type { Item } from "@/types/item";
 import { itemsTableColumns } from "../config";
 import { ItemDetailSheet } from "./item-detail-sheet";
 import { ItemsTableFilters } from "./items-table-filters";
@@ -17,26 +17,23 @@ const globalFilterFn: FilterFn<Item> = (row, _columnId, filterValue) => {
   const itemName = String(row.getValue("item_name")).toLowerCase();
   const specNumber = String(row.getValue("spec_number") || "").toLowerCase();
 
-  return (
-    itemName.includes(searchValue) ||
-    specNumber.includes(searchValue)
-  );
+  return itemName.includes(searchValue) || specNumber.includes(searchValue);
 };
 
 export const ItemsTable = () => {
-  const { data: itemsData, isLoading } = useItems();
-  const data = itemsData?.data || [];
+  const { data, isLoading } = useGetItems();
+
   const { open: openBulkEdit } = useBulkEditSheet();
   const { open: openUpdateTracking } = useUpdateTrackingSheet();
 
   // Extract unique phases and vendors for filter options
   const phaseOptions = useMemo(() => {
-    const phases = new Set(data.map((item) => item.phase));
+    const phases = new Set(data?.map((item) => item.phase));
     return Array.from(phases).sort();
   }, [data]);
 
   const vendorOptions = useMemo(() => {
-    const vendors = new Set(data.map((item) => item.vendor));
+    const vendors = new Set(data?.map((item) => item.ship_from));
     return Array.from(vendors).sort();
   }, [data]);
 
@@ -115,7 +112,7 @@ export const ItemsTable = () => {
         </h1>
       </header>
       <DataTable
-        data={data}
+        data={data || []}
         config={config}
         isLoading={isLoading}
         filters={filters}

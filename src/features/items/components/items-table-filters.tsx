@@ -7,7 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Item } from "../types";
+import type { Item } from "@/types/item";
 
 interface ItemsTableFiltersProps {
   table: Table<Item>;
@@ -37,7 +37,7 @@ const PhaseSelect = ({
 
   return (
     <Select value={selectedPhase || ""} onValueChange={handlePhaseSelect}>
-      <SelectTrigger className="h-[42px] gap-2 bg-[#fcfcfc] border-[#e0e0e0] min-w-32   font-medium text-content text-xs">
+      <SelectTrigger className="h-[42px] gap-2 bg-input-bg border-input-border min-w-32   font-medium text-content text-xs">
         <SelectValue placeholder="Phase" />
       </SelectTrigger>
       <SelectContent>
@@ -72,7 +72,7 @@ const VendorSelect = ({
 
   return (
     <Select value={selectedVendor || ""} onValueChange={handleVendorSelect}>
-      <SelectTrigger className="h-[42px] gap-2 bg-[#fcfcfc] border-[#e0e0e0]  min-w-32 font-medium text-content text-xs">
+      <SelectTrigger className="h-[42px] gap-2 bg-input-bg border-input-border  min-w-32 font-medium text-content text-xs">
         <SelectValue placeholder="Vendor" />
       </SelectTrigger>
       <SelectContent>

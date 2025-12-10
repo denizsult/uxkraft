@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import {
   useReactTable,
@@ -31,7 +29,6 @@ export function DataTable<TData>({
 
   const {
     columns,
-
     searchPlaceholder,
     bulkActions,
     initialPageSize = 5,
@@ -48,7 +45,6 @@ export function DataTable<TData>({
     onRowSelectionChange: enableRowSelection ? setRowSelection : undefined,
     onGlobalFilterChange: setGlobalFilter,
     onColumnFiltersChange: setColumnFilters,
- 
     enableRowSelection,
     state: {
       rowSelection: enableRowSelection ? rowSelection : {},

@@ -64,7 +64,10 @@ export default {
   				ring: 'hsl(var(--sidebar-ring))'
   			},
 			content: '#271716',
-			'sheet-bg': '#f7f5f5'
+			'sheet-bg': '#f7f5f5',
+			'input-bg': '#fcfcfc',
+			'muted-gray': '#616161',
+			'input-border': '#e0e0e0'
 		},
   		keyframes: {
   			'accordion-down': {
