@@ -1,1 +1,1 @@
-export { RenderIf } from './RenderIf';
+export * from './RenderIf';

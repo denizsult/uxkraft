@@ -6,7 +6,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { DataTablePaginationProps } from "@/types/datatable";
+ import type { DataTablePaginationProps } from "@/types/datatable";
+ import { RenderIf } from "@/components/render-if";
 
 const rowsPerPageOptions = [
   { value: "5", label: "5" },
@@ -52,96 +53,99 @@ export function DataTablePagination<TData>({
   };
 
   const visiblePages = getVisiblePages();
+  const hasData = totalRows > 0;
 
   return (
-    <nav
-      className="flex items-center justify-between w-full"
-      aria-label="Table pagination"
-    >
-      <div className="inline-flex items-center justify-end gap-3">
-        <label
-          htmlFor="rows-per-page"
-          className="[font-family:'Inter',Helvetica] font-medium text-[#271716] text-xs"
-        >
-          Rows per page
-        </label>
-        <Select
-          value={`${pageSize}`}
-          onValueChange={(value) => {
-            table.setPageSize(Number(value));
-          }}
-        >
-          <SelectTrigger
-            id="rows-per-page"
-            className="h-8 w-[70px] bg-[#fcfcfc] border-[#e0e0e0] [font-family:'Inter',Helvetica] font-medium text-[#271716] text-xs"
+    <RenderIf condition={hasData}>
+      <nav
+        className="flex items-center justify-between w-full"
+        aria-label="Table pagination"
+      >
+        <div className="inline-flex items-center justify-end gap-3">
+          <label
+            htmlFor="rows-per-page"
+            className=" font-medium text-content text-xs"
           >
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {rowsPerPageOptions.map((option) => (
-              <SelectItem key={option.value} value={option.value}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
+            Rows per page
+          </label>
+          <Select
+            value={`${pageSize}`}
+            onValueChange={(value) => {
+              table.setPageSize(Number(value));
+            }}
+          >
+            <SelectTrigger
+              id="rows-per-page"
+              className="h-8 w-[70px] bg-[#fcfcfc] border-[#e0e0e0]  font-medium text-content text-xs"
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {rowsPerPageOptions.map((option) => (
+                <SelectItem key={option.value} value={option.value}>
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
 
-      <div className="inline-flex items-center justify-end gap-8">
-        <div className="[font-family:'Inter',Helvetica] font-medium text-[#271716] text-xs text-center">
-          {startRow}-{endRow} of {totalRows}
+        <div className="inline-flex items-center justify-end gap-8">
+          <div className=" font-medium text-content text-xs text-center">
+            {startRow}-{endRow} of {totalRows}
+          </div>
+          <div className="inline-flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="w-4 h-4 p-0 hover:bg-transparent cursor-pointer"
+              disabled={!table.getCanPreviousPage()}
+              onClick={() => table.previousPage()}
+              aria-label="Previous page"
+            >
+              <img
+                className="w-4 h-4"
+                alt="Previous page"
+                src="/icons/sort-left-1.svg"
+              />
+            </Button>
+            {visiblePages.map((pageNum) => {
+              const isActive = pageIndex === pageNum;
+              return (
+                <Button
+                  key={pageNum}
+                  variant="ghost"
+                  size="sm"
+                  className={`h-auto p-0 min-w-0  font-bold text-sm tracking-[0] leading-[30px] cursor-pointer hover:bg-transparent ${
+                    isActive
+                      ? "text-[#8e2424] underline"
+                      : "text-content"
+                  }`}
+                  onClick={() => table.setPageIndex(pageNum)}
+                  aria-label={`Page ${pageNum + 1}`}
+                  aria-current={isActive ? "page" : undefined}
+                >
+                  {pageNum + 1}
+                </Button>
+              );
+            })}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="w-4 h-4 p-0 hover:bg-transparent cursor-pointer"
+              disabled={!table.getCanNextPage()}
+              onClick={() => table.nextPage()}
+              aria-label="Next page"
+            >
+              <img
+                className="w-4 h-4"
+                alt="Next page"
+                src="/icons/sort-left-2.svg"
+              />
+            </Button>
+          </div>
         </div>
-        <div className="inline-flex items-center gap-3">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="w-4 h-4 p-0 hover:bg-transparent cursor-pointer"
-            disabled={!table.getCanPreviousPage()}
-            onClick={() => table.previousPage()}
-            aria-label="Previous page"
-          >
-            <img
-              className="w-4 h-4"
-              alt="Previous page"
-              src="/icons/sort-left-1.svg"
-            />
-          </Button>
-          {visiblePages.map((pageNum) => {
-            const isActive = pageIndex === pageNum;
-            return (
-              <Button
-                key={pageNum}
-                variant="ghost"
-                size="sm"
-                className={`h-auto p-0 min-w-0 [font-family:'Inter',Helvetica] font-bold text-sm tracking-[0] leading-[30px] cursor-pointer hover:bg-transparent ${
-                  isActive
-                    ? "text-[#8e2424] underline"
-                    : "text-[#271716]"
-                }`}
-                onClick={() => table.setPageIndex(pageNum)}
-                aria-label={`Page ${pageNum + 1}`}
-                aria-current={isActive ? "page" : undefined}
-              >
-                {pageNum + 1}
-              </Button>
-            );
-          })}
-          <Button
-            variant="ghost"
-            size="icon"
-            className="w-4 h-4 p-0 hover:bg-transparent cursor-pointer"
-            disabled={!table.getCanNextPage()}
-            onClick={() => table.nextPage()}
-            aria-label="Next page"
-          >
-            <img
-              className="w-4 h-4"
-              alt="Next page"
-              src="/icons/sort-left-2.svg"
-            />
-          </Button>
-        </div>
-      </div>
-    </nav>
+      </nav>
+    </RenderIf>
   );
 }

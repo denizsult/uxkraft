@@ -37,7 +37,7 @@ export function DataTableBody<TData>({
               return (
                 <TableCell 
                   key={cell.id} 
-                  className={`p-3 ${!hasBorderInMeta ? "border-r border-[#eeeeee]" : ""} ${meta?.cellClassName || ""} [font-family:'Inter',Helvetica] font-normal text-[#271716] text-xs tracking-[0.20px]`}
+                  className={`p-3 ${!hasBorderInMeta ? "border-r border-[#eeeeee]" : ""} ${meta?.cellClassName || ""}  font-normal text-content text-xs `}
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </TableCell>

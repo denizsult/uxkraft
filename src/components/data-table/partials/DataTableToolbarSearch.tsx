@@ -24,7 +24,7 @@ export function DataTableToolbarSearch({
             placeholder={searchPlaceholder}
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            className="h-[42px] pl-9 pr-3 bg-[#fcfcfc] border-[#e0e0e0] [font-family:'Inter',Helvetica] font-normal text-[#616161] text-xs"
+            className="h-[42px] pl-9 pr-3 bg-[#fcfcfc] border-[#e0e0e0]  font-normal text-[#616161] text-xs"
           />
         </div>
       </div>

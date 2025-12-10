@@ -24,7 +24,7 @@ export function DataTableToolbarBulkActions<TData>({
 
   return (
     <div className="inline-flex h-8 items-center gap-3">
-      <div className="[font-family:'Inter',Helvetica] font-medium text-[#271716] text-xs tracking-[0.20px] leading-5 whitespace-nowrap">
+      <div className=" font-medium text-content text-xs  leading-5 whitespace-nowrap">
         {selectedRows.length} items selected
       </div>
       <div className="inline-flex items-start gap-2">
@@ -54,7 +54,7 @@ export function DataTableToolbarBulkActions<TData>({
                       <span className="w-4 h-4">{action.icon}</span>
                     </RenderIf>
                     <span
-                      className={`[font-family:'Inter',Helvetica] font-medium text-xs tracking-[0.20px] leading-4 whitespace-nowrap ${
+                      className={` font-medium text-xs  leading-4 whitespace-nowrap ${
                         action.variant === "destructive"
                           ? "text-[#ca0018]"
                           : "text-[#302e2e]"
@@ -94,7 +94,7 @@ export function DataTableToolbarBulkActions<TData>({
                 <span className="w-4 h-4">{action.icon}</span>
               </RenderIf>
               <span
-                className={`[font-family:'Inter',Helvetica] font-medium text-xs tracking-[0.20px] leading-4 whitespace-nowrap ${
+                className={` font-medium text-xs  leading-4 whitespace-nowrap ${
                   action.variant === "destructive"
                     ? "text-[#ca0018]"
                     : "text-[#302e2e]"

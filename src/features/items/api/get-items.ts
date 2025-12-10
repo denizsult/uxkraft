@@ -1,25 +1,34 @@
-import { useQuery, type QueryKey } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
-import type { Item } from '../types';
-import { mockItems } from './mock-items';
+import { api } from '@/lib/axios';
+import type { Item, PaginatedResponse, QueryItemsDto } from '../types';
 
-export const getItems = (): Promise<{ data: Item[] }> => {
-  // Simulate API delay
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve({ data: mockItems });
-    }, 500);
-  });
+export const getItems = async (params?: QueryItemsDto): Promise<PaginatedResponse<Item>> => {
+  const response = await api.get<PaginatedResponse<Item>>('/items', { params });
+  return response.data;
+};
+
+export const getItem = async (id: string): Promise<Item> => {
+  const response = await api.get<Item>(`/items/${id}`);
+  return response.data;
 };
 
 type UseItemsOptions = {
-  queryKey?: QueryKey;
+  params?: QueryItemsDto;
 };
 
-export const useItems = ({ queryKey = ['items'] }: UseItemsOptions = {}) => {
+export const useItems = ({ params }: UseItemsOptions = {}) => {
   return useQuery({
-    queryKey,
-    queryFn: () => getItems(),
+    queryKey: ['items', params],
+    queryFn: () => getItems(params),
+  });
+};
+
+export const useItem = (id: string) => {
+  return useQuery({
+    queryKey: ['items', id],
+    queryFn: () => getItem(id),
+    enabled: !!id,
   });
 };
 

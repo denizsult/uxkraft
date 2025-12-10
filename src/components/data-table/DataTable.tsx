@@ -17,7 +17,6 @@ import { DataTableBody } from "./DataTableBody";
 import { DataTableFooter } from "./DataTableFooter";
 import { DataTableToolbar } from "./DataTableToolbar";
 import type { DataTableProps } from "@/types/datatable";
-import { defaultGlobalFilterFn } from "@/lib/utils";
 
 export function DataTable<TData>({
   data,
@@ -32,7 +31,7 @@ export function DataTable<TData>({
 
   const {
     columns,
-    globalFilterFn = defaultGlobalFilterFn,
+
     searchPlaceholder,
     bulkActions,
     initialPageSize = 5,
@@ -49,7 +48,7 @@ export function DataTable<TData>({
     onRowSelectionChange: enableRowSelection ? setRowSelection : undefined,
     onGlobalFilterChange: setGlobalFilter,
     onColumnFiltersChange: setColumnFilters,
-    globalFilterFn,
+ 
     enableRowSelection,
     state: {
       rowSelection: enableRowSelection ? rowSelection : {},

@@ -1,8 +1,4 @@
-import { XIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -10,8 +6,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Sheet, SheetContent, SheetClose } from "@/components/ui/sheet";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useBulkEditSheet } from "@/stores/bulk-edit-sheet";
+import {
+  SheetHeader,
+  SheetFooter,
+  SheetContainer,
+  SheetCard,
+  SheetFormField,
+  SheetSection,
+} from "@/components/sheet-layout";
 
 export const BulkEditSheet = () => {
   const { isOpen, close, selectedItems } = useBulkEditSheet();
@@ -45,123 +49,83 @@ export const BulkEditSheet = () => {
         side="right"
         className="w-[600px] sm:max-w-[600px] p-0"
       >
-        <div className="flex flex-col min-h-screen bg-[#f7f5f5] border border-solid border-[#e0e0e0]">
-          <header className="flex items-start gap-5 pt-6 pb-4 px-6 w-full bg-transparent rounded-[4px_4px_2px_2px] relative">
-            <div className="flex flex-col items-start gap-4 flex-1">
-              <div className="flex flex-col items-start gap-2 w-full">
-                <h1 className="[font-family:'Inter',Helvetica] font-medium text-[#1f0909] text-xl tracking-[0.20px] leading-8">
-                  Bulk Edit
-                </h1>
-              </div>
-              <p className="[font-family:'Inter',Helvetica] font-normal text-xs tracking-[0.20px] leading-3">
-                <span className="font-semibold text-[#271716] tracking-[0.02px]">
+        <SheetContainer>
+          <SheetHeader
+            title="Bulk Edit"
+            subtitle={
+              <>
+                <span className="font-semibold text-content tracking-[0.02px]">
                   {selectedItems.length} items
                 </span>
-                <span className="font-light text-[#271716] tracking-[0.02px] leading-[0.1px]">
-                  &nbsp;
+                <span className="font-light text-content tracking-[0.02px] leading-[0.1px]">
+                  {" "}
                 </span>
-                <span className="text-[#271716] tracking-[0.02px] leading-[0.1px]">
+                <span className="text-content tracking-[0.02px] leading-[0.1px]">
                   will be updated
                 </span>
-              </p>
-            </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8 p-1 rounded-md absolute top-3 right-3"
-              onClick={close}
-            >
-              <XIcon className="w-6 h-6" />
-            </Button>
-          </header>
+              </>
+            }
+            onClose={close}
+            bgTransparent
+          />
           <main className="flex flex-col items-start gap-6 p-6 flex-1">
-            <Card className="w-full bg-white">
-              <CardContent className="flex flex-col items-start gap-10 p-6">
-                <div className="flex flex-col items-start gap-6 w-full">
-                  <div className="flex flex-col items-start gap-3 w-full">
-                    <h2 className="[font-family:'Inter',Helvetica] font-semibold text-[#271716] text-sm tracking-[0.20px] leading-8">
-                      Items Details
-                    </h2>
-                    <div className="flex flex-col items-start gap-4 w-full">
-                      <div className="flex items-start gap-6 w-full">
-                        {formFields.map((field) => (
-                          <div
-                            key={field.id}
-                            className="flex flex-col h-[68px] items-start gap-2 flex-1"
+            <SheetCard contentClassName="gap-10">
+              <SheetSection title="Items Details">
+                <div className="flex flex-col items-start gap-4 w-full">
+                  <div className="flex items-start gap-6 w-full">
+                    {formFields.map((field) => (
+                      <SheetFormField
+                        key={field.id}
+                        label={field.label}
+                        htmlFor={field.id}
+                        className="h-[68px] flex-1"
+                      >
+                        <Select defaultValue={field.value}>
+                          <SelectTrigger
+                            id={field.id}
+                            className="h-[42px] w-full bg-[#fcfcfc] border-[#e0e0e0] font-normal text-content text-xs tracking-[0] leading-6"
                           >
-                            <Label
-                              htmlFor={field.id}
-                              className="[font-family:'Inter',Helvetica] font-medium text-[#271716] text-xs tracking-[0.20px] leading-5"
-                            >
-                              {field.label}
-                            </Label>
-                            <Select defaultValue={field.value}>
-                              <SelectTrigger
-                                id={field.id}
-                                className="h-[42px] w-full bg-[#fcfcfc] border-[#e0e0e0] [font-family:'Inter',Helvetica] font-normal text-[#271716] text-xs tracking-[0] leading-6"
-                              >
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                {field.options.map((option) => (
-                                  <SelectItem key={option} value={option}>
-                                    {option}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        ))}
-                      </div>
-                      <div className="flex flex-col h-[68px] items-start gap-2 w-full">
-                        <Label
-                          htmlFor="shipFrom"
-                          className="[font-family:'Inter',Helvetica] font-medium text-[#271716] text-xs tracking-[0.20px] leading-5"
-                        >
-                          Ship From
-                        </Label>
-                        <Input
-                          id="shipFrom"
-                          className="h-[42px] w-full bg-[#fcfcfc] border-[#e0e0e0] [font-family:'Inter',Helvetica] font-normal text-[#271716] text-xs tracking-[0] leading-6"
-                          defaultValue=""
-                        />
-                      </div>
-                      <div className="flex flex-col h-[68px] items-start gap-2 w-full">
-                        <Label
-                          htmlFor="notes"
-                          className="[font-family:'Inter',Helvetica] font-medium text-[#271716] text-xs tracking-[0.20px] leading-5"
-                        >
-                          Notes for this item
-                        </Label>
-                        <Input
-                          id="notes"
-                          className="h-[42px] w-full bg-[#fcfcfc] border-[#e0e0e0] [font-family:'Inter',Helvetica] font-normal text-[#271716] text-xs tracking-[0] leading-6"
-                          defaultValue=""
-                        />
-                      </div>
-                    </div>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {field.options.map((option) => (
+                              <SelectItem key={option} value={option}>
+                                {option}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </SheetFormField>
+                    ))}
                   </div>
+                  <SheetFormField
+                    label="Ship From"
+                    htmlFor="shipFrom"
+                    className="h-[68px] w-full"
+                  >
+                    <Input
+                      id="shipFrom"
+                      className="h-[42px] w-full bg-[#fcfcfc] border-[#e0e0e0] font-normal text-content text-xs tracking-[0] leading-6"
+                      defaultValue=""
+                    />
+                  </SheetFormField>
+                  <SheetFormField
+                    label="Notes for this item"
+                    htmlFor="notes"
+                    className="h-[68px] w-full"
+                  >
+                    <Input
+                      id="notes"
+                      className="h-[42px] w-full bg-[#fcfcfc] border-[#e0e0e0] font-normal text-content text-xs tracking-[0] leading-6"
+                      defaultValue=""
+                    />
+                  </SheetFormField>
                 </div>
-              </CardContent>
-            </Card>
+              </SheetSection>
+            </SheetCard>
           </main>
-          <footer className="flex items-center gap-2 pt-4 pb-6 px-6 w-full rounded-[2px_2px_4px_4px]">
-            <SheetClose asChild>
-              <Button
-                variant="outline"
-                className="w-[100px] h-10 border-[#8e2424] text-[#8e2424] shadow-elevations-unstroked-depth-1 [font-family:'Inter',Helvetica] font-medium text-sm tracking-[0.20px]"
-              >
-                Cancel
-              </Button>
-            </SheetClose>
-            <Button
-              className="h-10 bg-[#8e2424] hover:bg-[#8e2424]/90 text-white shadow-elevations-unstroked-depth-1 [font-family:'Inter',Helvetica] font-medium text-sm tracking-[0.20px]"
-              onClick={handleSave}
-            >
-              Save Changes
-            </Button>
-          </footer>
-        </div>
+          <SheetFooter onCancel={close} onSave={handleSave} />
+        </SheetContainer>
       </SheetContent>
     </Sheet>
   );

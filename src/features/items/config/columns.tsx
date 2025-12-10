@@ -8,7 +8,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDownIcon } from "lucide-react";
 import { useItemDetailSheet } from "@/stores/item-detail-sheet";
 import type { Item } from "../types";
 
@@ -53,25 +52,25 @@ export const itemsTableColumns: ColumnDef<Item>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "itemNumber",
+    accessorKey: "item_number",
     meta: {
       headerClassName: "w-[74px]",
       cellClassName: "w-[74px]",
     },
     header: () => "Item#",
-    cell: ({ row }) => row.getValue("itemNumber"),
+    cell: ({ row }) => row.getValue("item_number"),
   },
   {
-    accessorKey: "specNumber",
+    accessorKey: "spec_number",
     meta: {
       headerClassName: "w-[74px]",
       cellClassName: "w-[74px]",
     },
     header: () => "Spec #",
-    cell: ({ row }) => row.getValue("specNumber"),
+    cell: ({ row }) => row.getValue("spec_number"),
   },
   {
-    accessorKey: "itemName",
+    accessorKey: "item_name",
     meta: {
       headerClassName: "w-[113.5px]",
       cellClassName: "w-[113.5px] text-[#8e2424]",
@@ -85,7 +84,7 @@ export const itemsTableColumns: ColumnDef<Item>[] = [
           className="cursor-pointer text-[#8e2424]"
           onClick={() => useItemDetailSheet.getState().open(item)}
         >
-          {row.getValue("itemName")}
+          {row.getValue("item_name")}
         </div>
       );
     },
@@ -104,13 +103,13 @@ export const itemsTableColumns: ColumnDef<Item>[] = [
     },
   },
   {
-    accessorKey: "shipTo",
+    accessorKey: "ship_to",
     meta: {
       headerClassName: "w-[103px]",
       cellClassName: "w-[103px]",
     },
     header: () => "Ship To",
-    cell: ({ row }) => row.getValue("shipTo"),
+    cell: ({ row }) => row.getValue("ship_to") || "-",
   },
   {
     accessorKey: "qty",
@@ -128,11 +127,15 @@ export const itemsTableColumns: ColumnDef<Item>[] = [
       cellClassName: "w-[63px] h-11",
     },
     header: () => "Phase",
-    cell: ({ row }) => (
-      <Badge className="w-[30px] h-7 flex items-center justify-center px-2.5 py-1 bg-[#e0e0e0] hover:bg-[#e0e0e0] [font-family:'Inter',Helvetica] font-semibold text-[#544f4f] text-xs rounded-[3px]">
-        {row.getValue("phase")}
-      </Badge>
-    ),
+    cell: ({ row }) => {
+      const phase = row.getValue("phase") as string | null;
+      if (!phase) return "-";
+      return (
+        <Badge className="w-[30px] h-7 flex items-center justify-center px-2.5 py-1 bg-[#e0e0e0] hover:bg-[#e0e0e0]  font-semibold text-[#544f4f] text-xs rounded-[3px]">
+          {phase}
+        </Badge>
+      );
+    },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id));
     },
@@ -154,15 +157,15 @@ export const itemsTableColumns: ColumnDef<Item>[] = [
     },
   },
   {
-    accessorKey: "shipNotes",
+    accessorKey: "ship_notes",
     meta: {
       headerClassName: "w-[113.5px]",
       cellClassName: "w-[113.5px] h-11 px-3 py-1.5",
     },
     header: () => "Ship Notes",
     cell: ({ row }) => (
-      <div className="[display:-webkit-box] [-webkit-line-clamp:1] [-webkit-box-orient:vertical] overflow-hidden text-ellipsis [font-family:'Inter',Helvetica] font-normal text-[#271716] text-xs tracking-[0.20px]">
-        {row.getValue("shipNotes")}
+      <div className="[display:-webkit-box] [-webkit-line-clamp:1] [-webkit-box-orient:vertical] overflow-hidden text-ellipsis  font-normal text-content text-xs ">
+        {row.getValue("ship_notes") || "-"}
       </div>
     ),
   },
@@ -178,10 +181,10 @@ export const itemsTableColumns: ColumnDef<Item>[] = [
         <DropdownMenuTrigger asChild>
           <Button
             variant="ghost"
-            className="h-auto p-0 gap-2 hover:bg-transparent [font-family:'Inter',Helvetica] font-medium text-[#312e2e] text-xs tracking-[0.20px]"
+            className="h-auto p-0 gap-2 cursor-pointer hover:bg-transparent  font-medium text-[#312e2e] text-xs "
           >
             Edit
-            <ChevronDownIcon className="w-4 h-4" />
+            <img src="/icons/chevron-down.svg" alt="chevron down" className="w-2 h-2" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">

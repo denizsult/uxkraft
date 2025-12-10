@@ -8,13 +8,15 @@ import { itemsTableColumns } from "../config";
 import { ItemDetailSheet } from "./item-detail-sheet";
 import { ItemsTableFilters } from "./items-table-filters";
 import { BulkEditSheet } from "./bulk-edit";
+import { UpdateTrackingSheet } from "./update-tracking";
 import { useBulkEditSheet } from "@/stores/bulk-edit-sheet";
+import { useUpdateTrackingSheet } from "@/stores/update-tracking-sheet";
 
 const globalFilterFn: FilterFn<Item> = (row, _columnId, filterValue) => {
   const searchValue = String(filterValue).toLowerCase();
-  const itemName = String(row.getValue("itemName")).toLowerCase();
-  const itemNumber = String(row.getValue("itemNumber")).toLowerCase();
-  const specNumber = String(row.getValue("specNumber")).toLowerCase();
+  const itemName = String(row.getValue("item_name")).toLowerCase();
+  const itemNumber = String(row.getValue("item_number")).toLowerCase();
+  const specNumber = String(row.getValue("spec_number") || "").toLowerCase();
 
   return (
     itemName.includes(searchValue) ||
@@ -27,6 +29,7 @@ export const ItemsTable = () => {
   const { data: itemsData, isLoading } = useItems();
   const data = itemsData?.data || [];
   const { open: openBulkEdit } = useBulkEditSheet();
+  const { open: openUpdateTracking } = useUpdateTrackingSheet();
 
   // Extract unique phases and vendors for filter options
   const phaseOptions = useMemo(() => {
@@ -52,12 +55,10 @@ export const ItemsTable = () => {
       {
         label: "Update Tracking",
         iconUrl: "/icons/bulk-edit.svg",
-        sheetComponent: (
-          <div className="p-6">
-            <h2 className="text-xl font-semibold mb-4">Update Tracking</h2>
-            <p>Update Tracking functionality will be implemented here.</p>
-          </div>
-        ),
+        onClick: async (selectedRows) => {
+          openUpdateTracking(selectedRows);
+        },
+        skipConfirmation: true,
       },
       {
         label: "Create PO",
@@ -77,7 +78,7 @@ export const ItemsTable = () => {
         },
       },
     ],
-    [openBulkEdit]
+    [openBulkEdit, openUpdateTracking]
   );
 
   const filters = useMemo(
@@ -111,7 +112,7 @@ export const ItemsTable = () => {
   return (
     <section className="flex flex-col gap-3 w-full">
       <header className="flex items-center gap-3 w-full">
-        <h1 className="flex-1 [font-family:'Inter',Helvetica] font-semibold text-[#271716] text-2xl tracking-[0.20px] leading-8">
+        <h1 className="flex-1  font-semibold text-content text-2xl  leading-8">
           Items
         </h1>
       </header>
@@ -123,6 +124,7 @@ export const ItemsTable = () => {
       />
       <ItemDetailSheet />
       <BulkEditSheet />
+      <UpdateTrackingSheet />
     </section>
   );
 };

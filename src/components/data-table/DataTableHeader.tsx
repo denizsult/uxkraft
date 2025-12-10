@@ -20,7 +20,7 @@ export function DataTableHeader<TData>({ table }: DataTableHeaderProps<TData>) {
             return (
               <TableHead 
                 key={header.id} 
-                className={`h-10 px-3 py-2.5 ${meta?.headerClassName || ""} ${!hasBorderInMeta ? "border-r border-[#d8d8d8]" : ""} ${isLast ? "last:border-r-0" : ""} [font-family:'Inter',Helvetica] font-medium text-[#616161] text-xs`}
+                className={`h-10 px-3 py-2.5 ${meta?.headerClassName || ""} ${!hasBorderInMeta ? "border-r border-[#d8d8d8]" : ""} ${isLast ? "last:border-r-0" : ""}  font-medium text-[#616161] text-xs`}
               >
                 {header.isPlaceholder
                   ? null
