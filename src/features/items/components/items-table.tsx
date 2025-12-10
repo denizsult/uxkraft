@@ -15,12 +15,10 @@ import { useUpdateTrackingSheet } from "@/stores/update-tracking-sheet";
 const globalFilterFn: FilterFn<Item> = (row, _columnId, filterValue) => {
   const searchValue = String(filterValue).toLowerCase();
   const itemName = String(row.getValue("item_name")).toLowerCase();
-  const itemNumber = String(row.getValue("item_number")).toLowerCase();
   const specNumber = String(row.getValue("spec_number") || "").toLowerCase();
 
   return (
     itemName.includes(searchValue) ||
-    itemNumber.includes(searchValue) ||
     specNumber.includes(searchValue)
   );
 };

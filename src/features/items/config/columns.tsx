@@ -52,13 +52,13 @@ export const itemsTableColumns: ColumnDef<Item>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "item_number",
+    accessorKey: "id",
     meta: {
       headerClassName: "w-[74px]",
       cellClassName: "w-[74px]",
     },
     header: () => "Item#",
-    cell: ({ row }) => row.getValue("item_number"),
+    cell: ({ row }) => row.getValue("id"),
   },
   {
     accessorKey: "spec_number",

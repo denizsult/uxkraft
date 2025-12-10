@@ -1,15 +1,8 @@
-export const ItemPhase = {
-  PLANNING: 'planning',
-  PRODUCTION: 'production',
-  SHIPPING: 'shipping',
-  DELIVERED: 'delivered',
-} as const;
-
-export type ItemPhase = typeof ItemPhase[keyof typeof ItemPhase];
+// Phase as numeric string: '1', '2', '3', '4'
+export type ItemPhase = '1' | '2' | '3' | '4';
 
 export type ItemPlanning = {
   id: string;
-  item_id: string;
   po_approval_date: string | null;
   hotel_need_by_date: string | null;
   expected_delivery: string | null;
@@ -19,7 +12,6 @@ export type ItemPlanning = {
 
 export type ItemProduction = {
   id: string;
-  item_id: string;
   production_start_date: string | null;
   production_end_date: string | null;
   qa_passed: boolean;
@@ -29,7 +21,6 @@ export type ItemProduction = {
 
 export type ItemShipping = {
   id: string;
-  item_id: string;
   ship_date: string | null;
   tracking_number: string | null;
   carrier: string | null;
@@ -40,7 +31,6 @@ export type ItemShipping = {
 
 export type Item = {
   id: string;
-  item_number: string;
   spec_number: string | null;
   item_name: string;
   vendor: string | null;
@@ -69,7 +59,6 @@ export type PaginatedResponse<T> = {
 };
 
 export type CreateItemDto = {
-  item_number: string;
   spec_number?: string;
   item_name: string;
   vendor?: string;
