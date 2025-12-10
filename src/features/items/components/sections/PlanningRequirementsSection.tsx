@@ -19,7 +19,7 @@ type FormValues = {
   expected_delivery: Date | null;
 };
 
-const dateFields = [
+const formFields = [
   { fieldName: "po_approval_date" as const, label: "PO Approval Date" },
   { fieldName: "hotel_need_by_date" as const, label: "Hotel Need by Date" },
   { fieldName: "expected_delivery" as const, label: "Expected Delivery" },
@@ -61,7 +61,7 @@ export const PlanningRequirementsSection = ({
             Planning &amp; Requirements
           </h2>
           <div className="grid grid-cols-3 gap-4 w-full">
-            {dateFields.map((field) => (
+            {formFields.map((field) => (
               <div key={field.fieldName} className="flex flex-col items-start gap-2">
                 <Label
                   htmlFor={field.fieldName}

@@ -1,5 +1,5 @@
-import { HeaderSection } from "./sections/HeaderSection";
-import { ShippingSection } from "./sections/ShippingSection";
+import { HeaderSection } from "../sections/HeaderSection";
+import { ShippingSection } from "../sections/ShippingSection";
 
 import { SheetContainer } from "@/components/sheet-layout";
 import type { Item } from "@/types/item";
@@ -9,13 +9,13 @@ import {
   type UpdatePlanningDto,
   type UpdateProductionShopDto,
   type UpdateShippingDto,
-} from "../api";
-import { useUpdateShipping } from "../api";
+} from "../../api";
+import { useUpdateShipping } from "../../api";
 import {
   ItemDetailsSection,
   PlanningRequirementsSection,
   ProductionShopSection,
-} from "./sections";
+} from "../sections";
 
 type ViewItemDetailsProps = {
   item: Item;

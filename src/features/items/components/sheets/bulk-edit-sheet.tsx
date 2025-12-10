@@ -16,7 +16,7 @@ import {
   SheetFormField,
   SheetSection,
 } from "@/components/sheet-layout";
-import { useBulkUpdateItems, type BulkUpdateItemsDto } from "../api";
+import { useBulkUpdateItems, type BulkUpdateItemsDto } from "../../api";
 import { useForm } from "react-hook-form";
 
 const formFields = [

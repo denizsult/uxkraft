@@ -20,7 +20,7 @@ type FormValues = {
   shipping_notes: string;
 };
 
-const dateFields = [
+const formFields = [
   { fieldName: "ordered_date" as const, label: "Ordered Date" },
   { fieldName: "shipped_date" as const, label: "Shipped Date" },
   { fieldName: "delivered_date" as const, label: "Delivered Date" },
@@ -65,7 +65,7 @@ export const ShippingSection = ({
             Shipping
           </h2>
           <div className="grid grid-cols-3 gap-4 w-full">
-            {dateFields.map((field) => (
+            {formFields.map((field) => (
               <div
                 key={field.fieldName}
                 className="flex flex-col items-start gap-2"

@@ -4,6 +4,7 @@ import {
 } from "@/components/ui/sheet";
 import { useItemDetailSheet } from "@/stores/item-detail-sheet";
 import { ViewItemDetails } from "./view-item-details";
+ 
 
 export const ItemDetailSheet = () => {
   const { isOpen, item, close } = useItemDetailSheet();

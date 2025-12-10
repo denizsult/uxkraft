@@ -1,12 +1,6 @@
-"use client";
-
 import { flexRender } from "@tanstack/react-table";
 import { RenderIf } from "@/components/render-if";
-import {
-  TableBody,
-  TableRow,
-  TableCell,
-} from "@/components/ui/table";
+import { TableBody, TableRow, TableCell } from "@/components/ui/table";
 import type { DataTableBodyProps } from "@/types/datatable";
 
 export function DataTableBody<TData>({
@@ -32,12 +26,18 @@ export function DataTableBody<TData>({
             className="border-b-0 hover:bg-[#fafafa] transition-colors"
           >
             {row.getVisibleCells().map((cell) => {
-              const meta = cell.column.columnDef.meta as { cellClassName?: string } | undefined;
+              const meta = cell.column.columnDef.meta as
+                | { cellClassName?: string }
+                | undefined;
               const hasBorderInMeta = meta?.cellClassName?.includes("border-r");
               return (
-                <TableCell 
-                  key={cell.id} 
-                  className={`p-3 ${!hasBorderInMeta ? "border-r border-[#eeeeee]" : ""} ${meta?.cellClassName || ""}  font-normal text-content text-xs `}
+                <TableCell
+                  key={cell.id}
+                  className={`p-3 ${
+                    !hasBorderInMeta ? "border-r border-[#eeeeee]" : ""
+                  } ${
+                    meta?.cellClassName || ""
+                  }  font-normal text-content text-xs `}
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </TableCell>
@@ -49,4 +49,3 @@ export function DataTableBody<TData>({
     </TableBody>
   );
 }
-

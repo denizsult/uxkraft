@@ -1,24 +1,15 @@
 import { useMemo } from "react";
-import type { FilterFn, Table } from "@tanstack/react-table";
-import { DataTable } from "@/components/data-table";
 import type { DataTableConfig, BulkAction } from "@/components/data-table";
-import { useGetItems } from "../api";
+import type { FilterFn, Table } from "@tanstack/react-table";
 import type { Item } from "@/types/item";
-import { itemsTableColumns } from "../config";
-import { ItemDetailSheet } from "./item-detail-sheet";
-import { ItemsTableFilters } from "./items-table-filters";
-import { BulkEditSheet } from "./bulk-edit";
-import { UpdateTrackingSheet } from "./update-tracking";
+import { DataTable } from "@/components/data-table";
 import { useBulkEditSheet } from "@/stores/bulk-edit-sheet";
 import { useUpdateTrackingSheet } from "@/stores/update-tracking-sheet";
-
-const globalFilterFn: FilterFn<Item> = (row, _columnId, filterValue) => {
-  const searchValue = String(filterValue).toLowerCase();
-  const itemName = String(row.getValue("item_name")).toLowerCase();
-  const specNumber = String(row.getValue("spec_number") || "").toLowerCase();
-
-  return itemName.includes(searchValue) || specNumber.includes(searchValue);
-};
+import { useGetItems } from "../../api";
+import { ItemsTableFilters } from "./items-table-filters";
+import { itemsTableColumns } from "../../config";
+import { BulkEditSheet, ItemDetailSheet, UpdateTrackingSheet } from "../sheets";
+import { globalFilterFn } from "@/utils/datatable";
 
 export const ItemsTable = () => {
   const { data, isLoading } = useGetItems();
@@ -95,7 +86,7 @@ export const ItemsTable = () => {
   const config: DataTableConfig<Item> = useMemo(
     () => ({
       columns: itemsTableColumns,
-      globalFilterFn,
+      globalFilterFn: globalFilterFn as FilterFn<Item>,
       searchPlaceholder: "Find by Item Name, Item # or Spec #",
       bulkActions,
       initialPageSize: 5,

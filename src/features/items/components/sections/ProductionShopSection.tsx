@@ -17,7 +17,7 @@ type FormValues = {
   cfa_shops_delivered: Date | null;
 };
 
-const dateFields = [
+const formFields = [
   {
     fieldName: "cfa_shops_send" as const,
     label: "CFA/Shops Send",
@@ -59,7 +59,7 @@ export const ProductionShopSection = ({
           Production &amp; Shop
         </h2>
         <div className="grid grid-cols-3 gap-4 w-full">
-          {dateFields.map((field) => (
+          {formFields.map((field) => (
             <div
               key={field.fieldName}
               className="flex flex-col items-start gap-2"
