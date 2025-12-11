@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Textarea } from "@/components/ui/textarea";
 import type { Shipping } from "@/types/item";
+import { format } from "date-fns";
 
 type ItemDetailsSectionProps = {
   orderedDate?: Shipping["ordered_date"];
@@ -48,7 +49,7 @@ export const ShippingSection = ({
     value: Date | null
   ) => {
     setValue(field, value);
-    const isoValue = value ? value.toISOString() : "";
+    const isoValue = value ? format(value, "yyyy-MM-dd") : "";
     onFieldChange(field, isoValue);
   };
 

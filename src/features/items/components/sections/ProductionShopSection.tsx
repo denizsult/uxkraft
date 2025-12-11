@@ -1,6 +1,7 @@
 
 import { useForm, Controller } from "react-hook-form";
 import { Label } from "@/components/ui/label";
+import { format } from "date-fns";
 import { DatePicker } from "@/components/ui/date-picker";
 import type { Production } from "@/types/item";
 
@@ -8,7 +9,7 @@ type ProductionShopSectionProps = {
   cfaShopsSend?: Production["cfa_shops_send"];
   cfaShopsApproved?: Production["cfa_shops_approved"];
   cfaShopsDelivered?: Production["cfa_shops_delivered"];
-  onFieldChange: (field: string, value: string) => void;
+  onFieldChange: (field: string, value: string | null) => void;
 };
 
 type FormValues = {
@@ -48,8 +49,8 @@ export const ProductionShopSection = ({
 
   const handleFieldChange = (field: keyof FormValues, value: Date | null) => {
     setValue(field, value);
-    const isoValue = value ? value.toISOString() : "";
-    onFieldChange(field, isoValue);
+    const formattedValue = value ? format(value, "yyyy-MM-dd") : null;
+    onFieldChange(field, formattedValue);
   };
 
   return (
