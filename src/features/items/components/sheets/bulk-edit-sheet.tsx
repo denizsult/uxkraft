@@ -81,6 +81,7 @@ export const BulkEditSheet = () => {
     await bulkUpdateItemsMutation({
       ...values,
       item_ids: selectedItems.map((i) => i.id),
+      ship_from: values.ship_from?.length ? values.ship_from : undefined,
     });
 
     handleClose();
