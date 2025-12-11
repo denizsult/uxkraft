@@ -28,7 +28,7 @@ type AppProviderProps = {
 
 export const AppProvider = ({ children }: AppProviderProps) => {
   return (
-    <ErrorBoundary FallbackComponent={ErrorFallback}>
+    <ErrorBoundary FallbackComponent={ErrorFallback} onError={error => console.error(error)}>
       <QueryClientProvider client={queryClient}>
         {import.meta.env.DEV && <ReactQueryDevtools />}
         {children}

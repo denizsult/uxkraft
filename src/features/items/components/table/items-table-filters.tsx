@@ -76,7 +76,7 @@ const VendorSelect = ({
         <SelectValue placeholder="Vendor" />
       </SelectTrigger>
       <SelectContent>
-        {options.map((option) => (
+        {options.filter(option => option.length).map((option) => (
           <SelectItem key={option} value={option}>
             {option}
           </SelectItem>

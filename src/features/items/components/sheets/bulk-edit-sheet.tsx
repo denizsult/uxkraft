@@ -17,28 +17,21 @@ import {
   SheetSection,
 } from "@/components/sheet-layout";
 import { useBulkUpdateItems, type BulkUpdateItemsDto } from "../../api";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 
-const formFields = [
+const formFields: Array<{
+  id: keyof BulkUpdateItemsDto;
+  label: string;
+  options: string[];
+}> = [
   {
     id: "location",
     label: "Location",
-    type: "select",
-    value: "Bedroom",
-    options: [
-      "Bedroom",
-      "Living Room",
-      "Kitchen",
-      "Bathroom",
-      "Office",
-      "Other",
-    ],
+    options: ["Bedroom", "Living Room", "Kitchen", "Bathroom", "Office", "Other"],
   },
   {
     id: "category",
     label: "Category",
-    type: "select",
-    value: "Drapery",
     options: [
       "Drapery",
       "Window Treatments",
@@ -51,11 +44,13 @@ const formFields = [
     ],
   },
 ];
+
 export const BulkEditSheet = () => {
   const { isOpen, close, selectedItems } = useBulkEditSheet();
+
   const {
     mutateAsync: bulkUpdateItemsMutation,
-    isPending: isBulkUpdateItemsPending,
+    isPending,
   } = useBulkUpdateItems({
     refetchQueries: ["useGetItems"],
     onSuccessMessage: "Bulk edit updated successfully",
@@ -63,8 +58,9 @@ export const BulkEditSheet = () => {
   });
 
   const {
-    getValues,
-    setValue,
+    control,
+    register,
+    handleSubmit,
     reset,
     formState: { isDirty },
   } = useForm<BulkUpdateItemsDto>({
@@ -76,129 +72,118 @@ export const BulkEditSheet = () => {
     },
   });
 
-  const handleSave = async () => {
-    const formValues = getValues();
-    const data = {
-      ...formValues,
-      item_ids: selectedItems?.map((item) => item.id),
-    };
-
-    await bulkUpdateItemsMutation(data);
-    handleClose();
-  };
-
-  const handleFieldChange = (field: string, value: string) => {
-    setValue(field as keyof BulkUpdateItemsDto, value, { shouldDirty: true });
-  };
-
   const handleClose = () => {
-    reset(
-      {
-        location: undefined,
-        category: undefined,
-        ship_from: undefined,
-        ship_notes: undefined,
-      },
-      { keepDirty: false }
-    );
+    reset();
     close();
   };
 
+  const onSave = async (values: BulkUpdateItemsDto) => {
+    await bulkUpdateItemsMutation({
+      ...values,
+      item_ids: selectedItems.map((i) => i.id),
+    });
+
+    handleClose();
+  };
+
+  // ✔ En temiz, en okunabilir form submit wrapper
+  const onSubmit = handleSubmit(onSave);
+
   return (
     <Sheet open={isOpen} onOpenChange={handleClose}>
-      <SheetContent side="right" className="w-[600px] sm:max-w-[600px] p-0">
+      <SheetContent
+        side="right"
+        className="w-[600px] sm:max-w-[600px] p-0"
+      >
         <SheetContainer>
           <SheetHeader
             title="Bulk Edit"
             subtitle={
               <>
-                <span className="font-semibold text-content">
-                  {selectedItems.length} items
-                </span>
-                <span className="font-light text-content">
-                  {" "}
-                </span>
-                <span className="text-content">
-                  will be updated
-                </span>
+                <span className="font-semibold">{selectedItems.length} items</span>
+                <span> will be updated</span>
               </>
             }
             onClose={handleClose}
             bgTransparent
           />
-          <main className="flex flex-col items-start gap-6 p-6 flex-1">
+
+          <form onSubmit={onSubmit} className="flex flex-col flex-1 p-6">
             <SheetCard contentClassName="gap-10">
               <SheetSection title="Items Details">
-                <div className="flex flex-col items-start gap-4 w-full">
-                  <div className="flex items-start gap-6 w-full">
+                <div className="flex flex-col gap-4 w-full">
+                  
+                  {/* Location + Category */}
+                  <div className="flex gap-6 w-full">
                     {formFields.map((field) => (
                       <SheetFormField
                         key={field.id}
                         label={field.label}
                         htmlFor={field.id}
-                        className="h-[68px] flex-1"
+                        className="flex-1 h-[68px]"
                       >
-                        <Select
-                          defaultValue={field.value}
-                          onValueChange={(value) =>
-                            handleFieldChange(field.id, value)
-                          }
-                        >
-                          <SelectTrigger
-                            id={field.id}
-                            className="h-[42px] w-full bg-input-bg border-input-border font-normal text-content text-xs  leading-6"
-                          >
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {field.options.map((option) => (
-                              <SelectItem key={option} value={option}>
-                                {option}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
+                        <Controller
+                          control={control}
+                          name={field.id}
+                          render={({ field: ctrl }) => (
+                            <Select value={ctrl.value as string} onValueChange={ctrl.onChange}>
+                              <SelectTrigger
+                                id={field.id}
+                                className="h-[42px] text-xs bg-input-bg border-input-border"
+                              >
+                                <SelectValue placeholder={`Select ${field.label}`} />
+                              </SelectTrigger>
+
+                              <SelectContent>
+                                {field.options.map((option) => (
+                                  <SelectItem key={option} value={option}>
+                                    {option}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          )}
+                        />
                       </SheetFormField>
                     ))}
                   </div>
+
+                  {/* Ship From */}
                   <SheetFormField
                     label="Ship From"
-                    htmlFor="shipFrom"
+                    htmlFor="ship_from"
                     className="h-[68px] w-full"
                   >
                     <Input
-                      id="shipFrom"
-                      className="h-[42px] w-full bg-input-bg border-input-border font-normal text-content text-xs  leading-6"
-                      defaultValue=""
-                      onChange={(e) =>
-                        handleFieldChange("ship_from", e.target.value)
-                      }
+                      id="ship_from"
+                      {...register("ship_from")}
+                      className="h-[42px] text-xs bg-input-bg border-input-border"
                     />
                   </SheetFormField>
+
+                  {/* Notes */}
                   <SheetFormField
                     label="Notes for this item"
-                    htmlFor="notes"
+                    htmlFor="ship_notes"
                     className="h-[68px] w-full"
                   >
                     <Input
-                      id="notes"
-                      className="h-[42px] w-full bg-input-bg border-input-border font-normal text-content text-xs  leading-6"
-                      defaultValue=""
-                      onChange={(e) =>
-                        handleFieldChange("ship_notes", e.target.value)
-                      }
+                      id="ship_notes"
+                      {...register("ship_notes")}
+                      className="h-[42px] text-xs bg-input-bg border-input-border"
                     />
                   </SheetFormField>
                 </div>
               </SheetSection>
             </SheetCard>
-          </main>
-          <SheetFooter
-            onCancel={handleClose}
-            onSave={handleSave}
-            isLoading={isBulkUpdateItemsPending}
-            isSaveDisabled={!isDirty}
-          />
+
+            <SheetFooter
+              onCancel={handleClose}
+              onSave={onSubmit}        // ✔ En temiz kullanım
+              isLoading={isPending}
+              isSaveDisabled={!isDirty}
+            />
+          </form>
         </SheetContainer>
       </SheetContent>
     </Sheet>

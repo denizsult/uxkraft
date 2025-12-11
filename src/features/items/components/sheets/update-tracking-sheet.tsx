@@ -1,189 +1,122 @@
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { useUpdateTrackingSheet } from "@/stores/update-tracking-sheet";
 import { useForm } from "react-hook-form";
-import {
-  SheetHeader,
-  SheetFooter,
-  SheetContainer,
-} from "@/components/sheet-layout";
-import {
-  PlanningRequirementsSection,
-  ProductionShopSection,
-} from "../sections";
-import { useBulkUpdateTracking } from "../../api";
+import { SheetHeader, SheetFooter, SheetContainer } from "@/components/sheet-layout";
+import { PlanningRequirementsSection, ProductionShopSection } from "../sections";
 import { ShippingSection } from "../sections/ShippingSection";
+import { useBulkUpdateTracking } from "../../api";
 
 type UpdateTrackingFormValues = {
   shipping: {
-    ordered_date: Date | undefined;
-    shipped_date: Date | undefined;
-    delivered_date: Date | undefined;
-    shipping_notes: string | undefined;
+    ordered_date?: Date;
+    shipped_date?: Date;
+    delivered_date?: Date;
+    shipping_notes?: string;
   };
   production: {
-    cfa_shops_send: Date | undefined;
-    cfa_shops_approved: Date | undefined;
-    cfa_shops_delivered: Date | undefined;
+    cfa_shops_send?: Date;
+    cfa_shops_approved?: Date;
+    cfa_shops_delivered?: Date;
   };
   planning: {
-    po_approval_date: Date | undefined;
-    hotel_need_by_date: Date | undefined;
-    expected_delivery: Date | undefined;
+    po_approval_date?: Date;
+    hotel_need_by_date?: Date;
+    expected_delivery?: Date;
   };
 };
 
 const defaultValues: UpdateTrackingFormValues = {
-  shipping: {
-    ordered_date: undefined,
-    shipped_date: undefined,
-    delivered_date: undefined,
-    shipping_notes: undefined,
-  },
-  production: {
-    cfa_shops_send: undefined,
-    cfa_shops_approved: undefined,
-    cfa_shops_delivered: undefined,
-  },
-  planning: {
-    po_approval_date: undefined,
-    hotel_need_by_date: undefined,
-    expected_delivery: undefined,
-  },
+  shipping: {},
+  production: {},
+  planning: {},
 };
+
 export const UpdateTrackingSheet = () => {
   const { isOpen, close, selectedItems } = useUpdateTrackingSheet();
 
-  const {
-    mutateAsync: bulkUpdateTrackingMutation,
-    isPending: isBulkUpdateTrackingPending,
-  } = useBulkUpdateTracking({
+  const { mutateAsync, isPending } = useBulkUpdateTracking({
     refetchQueries: ["useGetItems"],
     onSuccessMessage: "Tracking updated successfully",
     onErrorMessage: "Failed to update tracking",
-    onSuccess: () => {
-      handleClose();
-    },
+    onSuccess: () => handleClose(),
   });
 
   const {
     setValue,
-    getValues,
+    watch,
     reset,
     formState: { isDirty },
   } = useForm<UpdateTrackingFormValues>({
     defaultValues,
   });
 
-  const formValues = getValues();
+  const values = watch();
+
+  /** 
+   * Unified nested updater:
+   * update("planning.po_approval_date", newValue)
+   */
+  const update = (path: string, value: any) => {
+    setValue(path as any, value , { shouldDirty: true });
+  };
 
   const handleSave = async () => {
-    const formValues = getValues();
-    await bulkUpdateTrackingMutation({
-      item_ids: selectedItems.map((item) => item.id),
-      planning: formValues.planning,
-      production: formValues.production,
-      shipping: formValues.shipping,
-    });
-  };
-
-  const handlePlanningChange = (
-    field: keyof UpdateTrackingFormValues["planning"],
-    value: string
-  ) => {
-    setValue("planning", {
-      ...getValues("planning"),
-      [field]: value ? new Date(value) : null,
-    });
-  };
-
-  const handleProductionChange = (
-    field: keyof UpdateTrackingFormValues["production"],
-    value: string
-  ) => {
-    setValue("production", {
-      ...getValues("production"),
-      [field]: value,
-    });
-  };
-
-  const handleShippingChange = (
-    field: keyof UpdateTrackingFormValues["shipping"],
-    value: string | null
-  ) => {
-    setValue("shipping", {
-      ...getValues("shipping"),
-      [field]: value || null,
+    await mutateAsync({
+      item_ids: selectedItems.map((i) => i.id),
+      planning: values.planning,
+      production: values.production,
+      shipping: values.shipping,
     });
   };
 
   const handleClose = () => {
-    reset(defaultValues, { keepDirty: false });
+    reset(defaultValues);
     close();
   };
 
   return (
     <Sheet open={isOpen} onOpenChange={handleClose}>
-      <SheetContent
-        side="right"
-        className="w-full sm:max-w-[600px] overflow-y-auto bg-sheet-bg p-0"
-      >
+      <SheetContent side="right" className="w-full sm:max-w-[600px] bg-sheet-bg p-0 overflow-y-auto">
         <SheetContainer>
           <SheetHeader
             title="Update Tracking"
             subtitle={
               <>
-                <span className="font-semibold text-content">
-                  {selectedItems.length} items
-                </span>
-                <span className="font-light text-content"> </span>
-                <span className="text-content">will be updated</span>
+                <span className="font-semibold">{selectedItems.length} items</span>
+                <span> will be updated</span>
               </>
             }
             onClose={handleClose}
           />
 
-          <main className="flex flex-col flex-1 w-full items-start p-6 gap-4">
+          <main className="flex flex-col flex-1 p-6 gap-4">
             <PlanningRequirementsSection
-              poApprovalDate={formValues.planning.po_approval_date}
-              hotelNeedByDate={formValues.planning.hotel_need_by_date}
-              expectedDelivery={formValues.planning.expected_delivery}
-              onFieldChange={(field, value) => {
-                handlePlanningChange(
-                  field as keyof UpdateTrackingFormValues["planning"],
-                  value
-                );
-              }}
+              poApprovalDate={values.planning.po_approval_date}
+              hotelNeedByDate={values.planning.hotel_need_by_date}
+              expectedDelivery={values.planning.expected_delivery}
+              onFieldChange={(field, v) => update(`planning.${field}`, v ? new Date(v) : null)}
             />
 
             <ProductionShopSection
-              cfaShopsSend={formValues.production.cfa_shops_send}
-              cfaShopsApproved={formValues.production.cfa_shops_approved}
-              cfaShopsDelivered={formValues.production.cfa_shops_delivered}
-              onFieldChange={(field, value) => {
-                handleProductionChange(
-                  field as keyof UpdateTrackingFormValues["production"],
-                  value
-                );
-              }}
+              cfaShopsSend={values.production.cfa_shops_send}
+              cfaShopsApproved={values.production.cfa_shops_approved}
+              cfaShopsDelivered={values.production.cfa_shops_delivered}
+              onFieldChange={(field, v) => update(`production.${field}`, v )}
             />
+
             <ShippingSection
-              orderedDate={formValues.shipping.ordered_date}
-              shippedDate={formValues.shipping.shipped_date}
-              deliveredDate={formValues.shipping.delivered_date}
-              shippingNotes={formValues.shipping.shipping_notes}
-              onFieldChange={(field, value) => {
-                handleShippingChange(
-                  field as keyof UpdateTrackingFormValues["shipping"],
-                  value
-                );
-              }}
+              orderedDate={values.shipping.ordered_date}
+              shippedDate={values.shipping.shipped_date}
+              deliveredDate={values.shipping.delivered_date}
+              shippingNotes={values.shipping.shipping_notes}
+              onFieldChange={(field, v) => update(`shipping.${field}`, v )}
             />
           </main>
 
           <SheetFooter
             onCancel={handleClose}
             onSave={handleSave}
-            isLoading={isBulkUpdateTrackingPending}
+            isLoading={isPending}
             isSaveDisabled={!isDirty}
           />
         </SheetContainer>
