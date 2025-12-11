@@ -68,7 +68,7 @@ export const BulkEditSheet = () => {
       location: undefined,
       category: undefined,
       ship_from: undefined,
-      ship_notes: undefined,
+      item_notes: undefined,
     },
   });
 
@@ -164,12 +164,12 @@ export const BulkEditSheet = () => {
                   {/* Notes */}
                   <SheetFormField
                     label="Notes for this item"
-                    htmlFor="ship_notes"
+                    htmlFor="item_notes"
                     className="h-[68px] w-full"
                   >
                     <Input
-                      id="ship_notes"
-                      {...register("ship_notes")}
+                      id="item_notes"
+                      {...register("item_notes")}
                       className="h-[42px] text-xs bg-input-bg border-input-border"
                     />
                   </SheetFormField>

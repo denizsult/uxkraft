@@ -8,7 +8,7 @@ export type BulkUpdateItemsDto = {
   location?: string;
   category?: string;
   ship_from?: string;
-  ship_notes?: string;
+  item_notes?: string;
 };
 
 export const bulkUpdateItems = async (data: BulkUpdateItemsDto): Promise<Item[]> => {

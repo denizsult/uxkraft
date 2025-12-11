@@ -23,7 +23,7 @@ export type BulkUpdateTrackingDto = {
     delivered_date?: string | null;
     shipping_notes?: string | null;
   };
-  ship_notes?: string | null;
+  item_notes?: string | null;
   ship_from?: string | null;
 };
 

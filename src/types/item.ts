@@ -8,7 +8,7 @@ export interface Item {
   qty: number;
   phase: string;
   price: string;
-  ship_notes: string | null;
+  item_notes: string | null;
   location: string;
   category: string;
   created_at: string;

@@ -53,7 +53,7 @@ export const ItemDetailsSection = ({
     },
     {
       label: "Notes for this item",
-      value: item.ship_notes || "-",
+      value: item.item_notes || "-",
       col: "col-[3_/_4]",
       row: "row-[2_/_3]",
     },

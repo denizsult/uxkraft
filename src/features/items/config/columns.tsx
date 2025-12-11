@@ -160,7 +160,7 @@ export const itemsTableColumns: ColumnDef<Item>[] = [
     },
   },
   {
-    accessorKey: "ship_notes",
+    accessorKey: "shipping_notes",
     meta: {
       headerClassName: "w-[113.5px]",
       cellClassName: "w-[113.5px] h-11 px-3 py-1.5",
@@ -168,7 +168,7 @@ export const itemsTableColumns: ColumnDef<Item>[] = [
     header: () => "Ship Notes",
     cell: ({ row }) => (
       <div className="line-clamp-1 overflow-hidden text-ellipsis font-normal text-content text-xs">
-        {row.getValue("ship_notes") || "-"}
+        {row.original.shipping?.shipping_notes || "-"}
       </div>
     ),
   },
