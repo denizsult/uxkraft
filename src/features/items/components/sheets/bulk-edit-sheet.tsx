@@ -82,6 +82,7 @@ export const BulkEditSheet = () => {
       ...values,
       item_ids: selectedItems.map((i) => i.id),
       ship_from: values.ship_from?.length ? values.ship_from : undefined,
+      item_notes: values.item_notes?.length ? values.item_notes : undefined,
     });
 
     handleClose();
