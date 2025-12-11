@@ -105,7 +105,7 @@ export const BulkEditSheet = () => {
   };
 
   return (
-    <Sheet open={isOpen} onOpenChange={close}>
+    <Sheet open={isOpen} onOpenChange={handleClose}>
       <SheetContent side="right" className="w-[600px] sm:max-w-[600px] p-0">
         <SheetContainer>
           <SheetHeader

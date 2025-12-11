@@ -18,6 +18,7 @@ export const useExtendedMutation = <
     ...restConfig,
 
     onSuccess: async (data, variables, onMutateResult, context) => {
+      await onSuccess?.(data, variables, onMutateResult, context);
 
       if (refetchQueries?.length) {
         await Promise.all(
@@ -33,7 +34,6 @@ export const useExtendedMutation = <
         toast.success(onSuccessMessage);
       }
 
-      await onSuccess?.(data, variables, onMutateResult, context);
 
     },
     onError: (error, variables, onMutateResult, context) => {

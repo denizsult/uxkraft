@@ -1,11 +1,11 @@
-import { useMemo } from "react";
+import { useMemo, useCallback } from "react";
 import type { DataTableConfig, BulkAction } from "@/components/data-table";
 import type { FilterFn, Table } from "@tanstack/react-table";
 import type { Item } from "@/types/item";
 import { DataTable } from "@/components/data-table";
 import { useBulkEditSheet } from "@/stores/bulk-edit-sheet";
 import { useUpdateTrackingSheet } from "@/stores/update-tracking-sheet";
-import { useGetItems } from "../../api";
+import { useGetItems, useDownloadCSV } from "../../api";
 import { ItemsTableFilters } from "./items-table-filters";
 import { itemsTableColumns } from "../../config";
 import { BulkEditSheet, ItemDetailSheet, UpdateTrackingSheet } from "../sheets";
@@ -16,6 +16,11 @@ export const ItemsTable = () => {
 
   const { open: openBulkEdit } = useBulkEditSheet();
   const { open: openUpdateTracking } = useUpdateTrackingSheet();
+  const { mutateAsync: downloadCSV } = useDownloadCSV();
+
+  const handleCSVDownload = useCallback(() => {
+    downloadCSV({});
+  }, [downloadCSV]);
 
   // Extract unique phases and vendors for filter options
   const phaseOptions = useMemo(() => {
@@ -74,13 +79,10 @@ export const ItemsTable = () => {
           table={table}
           phaseOptions={phaseOptions}
           vendorOptions={vendorOptions}
-          onImportClick={() => {
-            console.log("Import clicked");
-            // Implement import logic
-          }}
+          onCSVDownload={handleCSVDownload}
         />
       ),
-    [phaseOptions, vendorOptions]
+    [phaseOptions, vendorOptions, handleCSVDownload]
   );
 
   const config: DataTableConfig<Item> = useMemo(

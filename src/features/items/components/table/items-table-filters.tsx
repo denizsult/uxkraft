@@ -13,7 +13,7 @@ interface ItemsTableFiltersProps {
   table: Table<Item>;
   phaseOptions: string[];
   vendorOptions: string[];
-  onImportClick?: () => void;
+  onCSVDownload?: () => void;
 }
 
 const PhaseSelect = ({
@@ -90,7 +90,7 @@ export const ItemsTableFilters = ({
   table,
   phaseOptions,
   vendorOptions,
-  onImportClick,
+  onCSVDownload,
 }: ItemsTableFiltersProps) => {
   return (
     <>
@@ -102,7 +102,7 @@ export const ItemsTableFilters = ({
         src="/icons/frame-36593.svg"
         onClick={() => {
           console.log("Import clicked");
-          onImportClick?.();
+          onCSVDownload?.();
         }}
       />
     </>

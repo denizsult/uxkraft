@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { format } from "date-fns";
 import { enUS } from "date-fns/locale";
 import {
@@ -26,8 +27,10 @@ export const DatePicker = ({
   showIcon = true,
   className,
 }: DatePickerProps) => {
+  const [open, setOpen] = useState(false);
+
   return (
-    <Popover>
+    <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <button
           type="button"
@@ -51,7 +54,10 @@ export const DatePicker = ({
         <Calendar
           mode="single"
           selected={value || undefined}
-          onSelect={(date) => onChange(date || null)}
+          onSelect={(date) => {
+            onChange(date || null);
+            setOpen(false);
+          }}
         />
       </PopoverContent>
     </Popover>

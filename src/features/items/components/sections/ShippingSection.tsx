@@ -54,6 +54,9 @@ export const ShippingSection = ({
 
   const handleNotesChange = (value: string) => {
     setValue("shipping_notes", value);
+  };
+
+  const handleNotesBlur = (value: string) => {
     onFieldChange("shipping_notes", value);
   };
 
@@ -108,6 +111,7 @@ export const ShippingSection = ({
                   id="shipping_notes"
                   value={value}
                   onChange={(e) => handleNotesChange(e.target.value)}
+                  onBlur={(e) => handleNotesBlur(e.target.value)}
                   className="min-h-[88px] w-full bg-input-bg rounded border border-solid border-input-border font-normal text-content text-xs leading-6 px-3 py-2"
                   placeholder="Delicate product"
                 />

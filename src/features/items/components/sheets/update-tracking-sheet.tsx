@@ -15,23 +15,41 @@ import { ShippingSection } from "../sections/ShippingSection";
 
 type UpdateTrackingFormValues = {
   shipping: {
-    ordered_date: Date | null;
-    shipped_date: Date | null;
-    delivered_date: Date | null;
-    shipping_notes: string;
+    ordered_date: Date | undefined;
+    shipped_date: Date | undefined;
+    delivered_date: Date | undefined;
+    shipping_notes: string | undefined;
   };
   production: {
-    cfa_shops_send: Date | null;
-    cfa_shops_approved: Date | null;
-    cfa_shops_delivered: Date | null;
+    cfa_shops_send: Date | undefined;
+    cfa_shops_approved: Date | undefined;
+    cfa_shops_delivered: Date | undefined;
   };
   planning: {
-    po_approval_date: Date | null;
-    hotel_need_by_date: Date | null;
-    expected_delivery: Date | null;
+    po_approval_date: Date | undefined;
+    hotel_need_by_date: Date | undefined;
+    expected_delivery: Date | undefined;
   };
 };
 
+const defaultValues: UpdateTrackingFormValues = {
+  shipping: {
+    ordered_date: undefined,
+    shipped_date: undefined,
+    delivered_date: undefined,
+    shipping_notes: undefined,
+  },
+  production: {
+    cfa_shops_send: undefined,
+    cfa_shops_approved: undefined,
+    cfa_shops_delivered: undefined,
+  },
+  planning: {
+    po_approval_date: undefined,
+    hotel_need_by_date: undefined,
+    expected_delivery: undefined,
+  },
+};
 export const UpdateTrackingSheet = () => {
   const { isOpen, close, selectedItems } = useUpdateTrackingSheet();
 
@@ -53,24 +71,10 @@ export const UpdateTrackingSheet = () => {
     reset,
     formState: { isDirty },
   } = useForm<UpdateTrackingFormValues>({
-    defaultValues: {
-      shipping: {
-        ordered_date: undefined,
-        shipped_date: undefined,
-        delivered_date: undefined,
-      },
-      production: {
-        cfa_shops_send: undefined,
-        cfa_shops_approved: undefined,
-        cfa_shops_delivered: undefined,
-      },
-      planning: {
-        po_approval_date: undefined,
-        hotel_need_by_date: undefined,
-        expected_delivery: undefined,
-      },
-    },
+    defaultValues,
   });
+
+  const formValues = getValues();
 
   const handleSave = async () => {
     const formValues = getValues();
@@ -113,33 +117,12 @@ export const UpdateTrackingSheet = () => {
   };
 
   const handleClose = () => {
-    reset(
-      {
-        shipping: {
-          ordered_date: undefined,
-          shipped_date: undefined,
-          delivered_date: undefined,
-        },
-        production: {
-          cfa_shops_send: undefined,
-          cfa_shops_approved: undefined,
-          cfa_shops_delivered: undefined,
-        },
-        planning: {
-          po_approval_date: undefined,
-          hotel_need_by_date: undefined,
-          expected_delivery: undefined,
-        },
-      },
-      { keepDirty: false }
-    );
+    reset(defaultValues, { keepDirty: false });
     close();
   };
 
-  const formValues = getValues();
-
   return (
-    <Sheet open={isOpen} onOpenChange={close}>
+    <Sheet open={isOpen} onOpenChange={handleClose}>
       <SheetContent
         side="right"
         className="w-full sm:max-w-[600px] overflow-y-auto bg-sheet-bg p-0"
@@ -152,12 +135,8 @@ export const UpdateTrackingSheet = () => {
                 <span className="font-semibold text-content">
                   {selectedItems.length} items
                 </span>
-                <span className="font-light text-content">
-                  {" "}
-                </span>
-                <span className="text-content">
-                  will be updated
-                </span>
+                <span className="font-light text-content"> </span>
+                <span className="text-content">will be updated</span>
               </>
             }
             onClose={handleClose}
