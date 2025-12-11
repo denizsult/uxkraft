@@ -56,7 +56,7 @@ export const UpdateTrackingSheet = () => {
    * Unified nested updater:
    * update("planning.po_approval_date", newValue)
    */
-  const update = (path: string, value: any) => {
+  const update = (path: string, value: unknown) => {
     setValue(path as any, value , { shouldDirty: true });
   };
 
