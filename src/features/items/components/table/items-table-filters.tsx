@@ -41,6 +41,7 @@ const PhaseSelect = ({
         <SelectValue placeholder="Phase" />
       </SelectTrigger>
       <SelectContent>
+        <SelectItem value="all">All</SelectItem>
         {options.map((option) => (
           <SelectItem key={option} value={option}>
             Phase {option}
@@ -76,6 +77,7 @@ const VendorSelect = ({
         <SelectValue placeholder="Vendor" />
       </SelectTrigger>
       <SelectContent>
+        <SelectItem value="all">All</SelectItem>
         {options.filter(option => option.length).map((option) => (
           <SelectItem key={option} value={option}>
             {option}
