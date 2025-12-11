@@ -10,6 +10,7 @@ import { ItemsTableFilters } from "./items-table-filters";
 import { itemsTableColumns } from "../../config";
 import { BulkEditSheet, ItemDetailSheet, UpdateTrackingSheet } from "../sheets";
 import { globalFilterFn } from "@/utils/datatable";
+import { toast } from "sonner";
 
 export const ItemsTable = () => {
   const { data, isLoading, isFetching } = useGetItems();
@@ -19,7 +20,11 @@ export const ItemsTable = () => {
   const { mutateAsync: downloadCSV } = useDownloadCSV();
 
   const handleCSVDownload = useCallback(() => {
-    downloadCSV({});
+    toast.promise(downloadCSV({}), {
+      loading: "Downloading CSV...",
+      success: "CSV downloaded successfully",
+      error: "Failed to download CSV. Please try again.",
+    });
   }, [downloadCSV]);
 
   // Extract unique phases and vendors for filter options
