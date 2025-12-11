@@ -88,7 +88,6 @@ export const BulkEditSheet = () => {
     handleClose();
   };
 
-  // ✔ En temiz, en okunabilir form submit wrapper
   const onSubmit = handleSubmit(onSave);
 
   return (
@@ -181,7 +180,7 @@ export const BulkEditSheet = () => {
 
             <SheetFooter
               onCancel={handleClose}
-              onSave={onSubmit}        // ✔ En temiz kullanım
+              onSave={onSubmit}       
               isLoading={isPending}
               isSaveDisabled={!isDirty}
             />
